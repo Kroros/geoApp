@@ -1,9 +1,12 @@
-using System;
 using Microsoft.EntityFrameworkCore;
+using geoApi.Entities;
+using NetTopologySuite.Geometries;
 
-class GeoDb : DbContext
+namespace geoApi.Data;
+
+class GeoContext : DbContext
 {
-    public GeoDb(DbContextOptions<GeoDb> options)
+    public GeoContext(DbContextOptions<GeoContext> options)
         : base(options) { }
 
     public DbSet<Volcano> Volcanoes => Set<Volcano>();
