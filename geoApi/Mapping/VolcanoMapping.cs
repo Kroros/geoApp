@@ -12,7 +12,8 @@ public static class VolcanoMapping
             volcano.VolcanoName,
             volcano.VolcanoType,
             volcano.LastEruption,
-            volcano.VolcanoLocation,
+            volcano.VolcanoLocation.Y,
+            volcano.VolcanoLocation.X,
             volcano.VolcanoElevation
         );
     }

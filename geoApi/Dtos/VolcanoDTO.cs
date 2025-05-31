@@ -7,6 +7,7 @@ public record class VolcanoDto(
     string VolcanoName,
     string VolcanoType,
     int? LastEruption,
-    Point VolcanoLocation,
+    double VolcanoLat,
+    double VolcanoLon,
     int VolcanoElevation
 );
