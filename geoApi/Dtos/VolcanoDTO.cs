@@ -1,5 +1,3 @@
-using NetTopologySuite.Geometries;
-
 namespace geoApi.Dtos;
 
 public record class VolcanoDto(
