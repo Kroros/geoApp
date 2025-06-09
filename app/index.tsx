@@ -7,11 +7,16 @@ import {
   StatusBar,
   ActivityIndicator
 } from "react-native";
-import React, { Component, useState, useEffect } from "react";
-import { Magnetometer } from "expo-sensors";
+import React, { useState, useEffect } from "react";
 import * as Location from "expo-location";
-import Compass from "../components/compass";
+import { NavigationContainer } from "@react-navigation/native";
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import Home from "@/pages/home";
 import Map from "../components/map";
+import Controles from "@/pages/controles";
+
+
+const Stack = createNativeStackNavigator();
 
 export default function Index() {
   const [location, setLocation] = useState<Location.LocationObject | null>(null);
@@ -22,7 +27,7 @@ export default function Index() {
       let { status } = await Location.requestBackgroundPermissionsAsync();
       if (status !== "granted") {
         setErrorMsg("Permission to access location was denied");
-        console.log("Permission to access location was denied");
+        console.error(errorMsg)
         return;
       }
 
@@ -37,21 +42,22 @@ export default function Index() {
   let longitude = Number(JSON.stringify(location?.coords.longitude));
   let altitude = Number(JSON.stringify(location?.coords.altitude));
 
+
   return (
-    <SafeAreaView style={styles.container}>
-      {latitude && longitude ? <Map lat={latitude} lng = {longitude} /> : <ActivityIndicator/>}
-      <Text>Current Altitude: {altitude}</Text>
-    </SafeAreaView>
+    <Stack.Navigator initialRouteName="Home">
+      <Stack.Screen
+      name="Home"
+      component={Home}
+      />
+
+      
+
+      <Stack.Screen
+      name="Controles" 
+      >
+        {props => <Controles/>}
+      </Stack.Screen>
+    </Stack.Navigator>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#222222",
-    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
-  },
-  texts: {
-    color: "#FFFFFF",
-  }
-});
