@@ -1,33 +1,69 @@
-import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
-import { Text, StyleSheet, View } from "react-native";
+import { StyleSheet, Alert, ActivityIndicator } from "react-native";
 import * as Location from 'expo-location';
-import React, { Component, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import { Asset } from "expo-asset";
+import { LatLng, LeafletView } from "react-native-leaflet-view";
+import * as FileSystem from "expo-file-system";
 
 interface Location {
     lat: number;
     lng: number;
 }
 
+const someCoords: LatLng = {
+  lat: 52,
+  lng: 5
+}
+
 export default function Map({ lat, lng }: Location) {
+  const [webViewContent, setWebViewContent] = useState<string | null>(null);
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadHtml = async () => {
+      try {
+        const path = require("../assets/leaflet.html");
+        const asset = Asset.fromModule(path);
+        await asset.downloadAsync();
+        const htmlContent = await FileSystem.readAsStringAsync(asset.localUri!);
+
+        if (isMounted) {
+          setWebViewContent(htmlContent)
+        }
+      } catch (error) {
+        Alert.alert("Error loading HTML", JSON.stringify(error));
+        console.error("Error loading HTML", error);
+      }
+    };
+
+    loadHtml();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  if (!webViewContent) {
+    return <ActivityIndicator size="large" />
+  }
+
   return (
-        <MapView
-            style={styles.map}
-            provider={PROVIDER_GOOGLE}
-            showsUserLocation
-            initialRegion={{
-                latitude: lat,
-                longitude: lng,
-                latitudeDelta: 0.0922,
-                longitudeDelta: 0.0421,
-            }}
-            >
-            <Marker
-                coordinate={{
-                latitude: 52,
-                longitude: 5,
-                }}
-            />
-        </MapView>
+       
+      <LeafletView
+        source={{ html: webViewContent }}
+        mapCenterPosition={{
+          lat: lat,
+          lng: lng
+        }}
+        doDebug={false}
+        mapMarkers={[
+          {
+            position: someCoords,
+            icon: '📍',
+            size: [32, 32],
+          }
+        ]}
+      />
     );
 }
 

@@ -4,7 +4,8 @@ import {
   View,
   SafeAreaView,
   Platform,
-  StatusBar
+  StatusBar,
+  ActivityIndicator
 } from "react-native";
 import React, { Component, useState, useEffect } from "react";
 import { Magnetometer } from "expo-sensors";
@@ -38,7 +39,8 @@ export default function Index() {
 
   return (
     <SafeAreaView style={styles.container}>
-      {latitude && longitude ? <Map lat={latitude} lng = {longitude} /> : <Text>ZET HIER EEN LOADING SCREEN</Text>}
+      {latitude && longitude ? <Map lat={latitude} lng = {longitude} /> : <ActivityIndicator/>}
+      <Text>Current Altitude: {altitude}</Text>
     </SafeAreaView>
   );
 }
