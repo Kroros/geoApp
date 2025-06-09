@@ -1,1 +1,2 @@
 GET http://localhost:5253/volcanoes/nearest?lat=52.214&lon=6.880
+
