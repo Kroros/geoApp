@@ -9,8 +9,6 @@ using geoApi.Entities;
 
 namespace geoApi.Endpoints;
 
-
-
 public static class VolcanoEndpoints
 {
     

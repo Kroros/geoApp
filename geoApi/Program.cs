@@ -33,5 +33,6 @@ app.UseRouting();
 app.UseCors("AllowAll");
 
 app.MapVolcanoEndpoints();
+app.MapCraterEndpoints();
 
 app.Run();
