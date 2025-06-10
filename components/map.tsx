@@ -1,3 +1,4 @@
+import axios from "axios";
 import { StyleSheet, Alert, ActivityIndicator } from "react-native";
 import * as Location from 'expo-location';
 import React, { useState, useEffect } from "react";
@@ -16,6 +17,14 @@ const someCoords: LatLng = {
 }
 
 export default function Map({ lat, lng }: Location) {
+  const volcanoesLink = "http://192.168.68.107:5253/volcanoes/";
+
+  const [ volcanoCoords, setVolcanoCoords ] = useState<LatLng[]>([]);
+  const [ volcanoMarkers, setVolcanoMarkers ] = useState<any[]>([]);
+  const [ volcanoMarkerVisible, setVolcanoMarkerVisibilty ] = useState<boolean>(true);
+
+  const [ markers, setMarkers ] = useState<any[]>([]);
+
   const [webViewContent, setWebViewContent] = useState<string | null>(null);
   useEffect(() => {
     let isMounted = true;
@@ -37,11 +46,45 @@ export default function Map({ lat, lng }: Location) {
     };
 
     loadHtml();
+    getVolcanoes();
 
     return () => {
       isMounted = false;
     };
   }, []);
+
+  useEffect(() => {
+    volcanoMarkerVisible ? setMarkers(volcanoMarkers) : setMarkers([]);
+  }, [volcanoMarkerVisible]);
+
+  function getVolcanoes() {
+    axios
+      .get(volcanoesLink)
+      .then((response) => {
+        const responseData = response.data;
+
+        const newCoords: LatLng[] = [];
+        const newMarkers: any[] = [];
+
+        responseData.slice().forEach((coord: any) => {
+          newCoords.push({
+            lat: coord.volcanolat,
+            lng: coord.volcanoLon
+          });
+          newMarkers.push({
+            position: { lat: coord.volcanoLat, lng: coord.volcanoLon },
+            icon: "🌋",
+            size: [32,32]
+          });
+        });
+
+        setVolcanoCoords(newCoords);
+        setVolcanoMarkers(newMarkers);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
 
   if (!webViewContent) {
     return <ActivityIndicator size="large" />
@@ -51,18 +94,8 @@ export default function Map({ lat, lng }: Location) {
        
       <LeafletView
         source={{ html: webViewContent }}
-        mapCenterPosition={{
-          lat: lat,
-          lng: lng
-        }}
         doDebug={false}
-        mapMarkers={[
-          {
-            position: someCoords,
-            icon: '📍',
-            size: [32, 32],
-          }
-        ]}
+        mapMarkers={markers}
       />
     );
 }

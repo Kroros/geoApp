@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using geoApi.GCDist;
 using System.Text.Json;
 using geoApi.Dtos;
+using geoApi.Entities;
 
 namespace geoApi.Endpoints;
 
@@ -17,6 +18,7 @@ public static class VolcanoEndpoints
     {
         var group = app.MapGroup("volcanoes");
 
+        //GET nearest volcano
         group.MapGet("/nearest", async (double lat, double lon, GeoContext dbContext) =>
         {
             var point = new Point(lon, lat) { SRID = 4326 };
@@ -42,15 +44,18 @@ public static class VolcanoEndpoints
 
             VolcanoDto? volcano = JsonSerializer.Deserialize<VolcanoDto>(jsonString); */
 
-            Console.WriteLine(nearest.Id);
-            Console.WriteLine(nearest.VolcanoName);
-            Console.WriteLine(nearest.VolcanoType);
-            Console.WriteLine(nearest.LastEruption);
-            Console.WriteLine(nearest.VolcanoLat);
-            Console.WriteLine(nearest.VolcanoLon);
-            Console.WriteLine(nearest.VolcanoElevation);
-
             return Results.Ok(nearest);
+        });
+
+        //GET volcanoes
+        group.MapGet("/", async (GeoContext dbContext) =>
+        {
+            var volcanoes = await dbContext.Volcanoes
+                            .Select(v => v.VolToDto())
+                            .AsNoTracking()
+                            .ToListAsync();
+
+            return Results.Ok(volcanoes);
         });
 
         return group;
