@@ -18,9 +18,9 @@ public static class CraterEndpoints
         //GET all craters with known location
         group.MapGet("/", async (GeoContext dbContext) =>
         {
-            var craters = await dbContext.Craters
+            var craters = await dbContext.MeteoricCraters
+                                        .Where(c => c.CraterLocation != null)
                                         .Select(c => c.CraterToDto())
-                                        .Where(c => c.CraterLat != null)
                                         .AsNoTracking()
                                         .ToListAsync();
 

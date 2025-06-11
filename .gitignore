@@ -39,3 +39,5 @@ process.env
 *.tsbuildinfo
 
 app-example
+
+geoApi/requests.http

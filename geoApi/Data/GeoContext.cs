@@ -14,7 +14,7 @@ class GeoContext : DbContext
     public DbSet<Volcano> Volcanoes => Set<Volcano>();
     public DbSet<GeoLocation> Geolocations => Set<GeoLocation>();
     public DbSet<Fault> Faults => Set<Fault>();
-    public DbSet<Crater> Craters => Set<Crater>();
+    public DbSet<Crater> MeteoricCraters => Set<Crater>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

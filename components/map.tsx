@@ -18,10 +18,15 @@ const someCoords: LatLng = {
 
 export default function Map({ lat, lng }: Location) {
   const volcanoesLink = "http://192.168.68.107:5253/volcanoes/";
+  const cratersLink = "http://192.168.68.107:5253/meteoricCraters/";
 
   const [ volcanoCoords, setVolcanoCoords ] = useState<LatLng[]>([]);
   const [ volcanoMarkers, setVolcanoMarkers ] = useState<any[]>([]);
   const [ volcanoMarkerVisible, setVolcanoMarkerVisibilty ] = useState<boolean>(true);
+
+  const [ craterCoords, setCraterCoords ] = useState<LatLng[]>([]);
+  const [ craterMarkers, setCraterMarkers ] = useState<any[]>([]);
+  const [ craterMarkerVisible, setCraterMarkerVisibilty ] = useState<boolean>(true);
 
   const [ markers, setMarkers ] = useState<any[]>([]);
 
@@ -47,6 +52,7 @@ export default function Map({ lat, lng }: Location) {
 
     loadHtml();
     getVolcanoes();
+    getCraters();
 
     return () => {
       isMounted = false;
@@ -54,8 +60,8 @@ export default function Map({ lat, lng }: Location) {
   }, []);
 
   useEffect(() => {
-    volcanoMarkerVisible ? setMarkers(volcanoMarkers) : setMarkers([]);
-  }, [volcanoMarkerVisible]);
+    volcanoMarkerVisible && craterMarkerVisible ? setMarkers([...volcanoMarkers, ...craterMarkers]) : setMarkers([]);
+  }, [volcanoMarkerVisible, craterMarkerVisible]);
 
   function getVolcanoes() {
     axios
@@ -80,6 +86,35 @@ export default function Map({ lat, lng }: Location) {
 
         setVolcanoCoords(newCoords);
         setVolcanoMarkers(newMarkers);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
+  function getCraters() {
+    axios
+      .get(cratersLink)
+      .then((response) => {
+        const responseData = response.data;
+
+        const newCoords: LatLng[] = [];
+        const newMarkers: any[] = [];
+
+        responseData.slice().forEach((coord: any) => {
+          newCoords.push({
+            lat: coord.craterLat,
+            lng: coord.craterLon
+          });
+          newMarkers.push({
+            position: { lat: coord.craterLat, lng: coord.craterLon },
+            icon: "☄️",
+            size: [32,32]
+          });
+        });
+
+        setCraterCoords(newCoords);
+        setCraterMarkers(newMarkers);
       })
       .catch((error) => {
         console.error(error);
