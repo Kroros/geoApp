@@ -1,5 +1,5 @@
 import axios from "axios";
-import { StyleSheet, Alert, ActivityIndicator } from "react-native";
+import { StyleSheet, Alert, ActivityIndicator, Button, View, Platform, StatusBar, } from "react-native";
 import * as Location from 'expo-location';
 import React, { useState, useEffect } from "react";
 import { Asset } from "expo-asset";
@@ -11,14 +11,10 @@ interface Location {
     lng: number;
 }
 
-const someCoords: LatLng = {
-  lat: 52,
-  lng: 5
-}
 
 export default function Map({ lat, lng }: Location) {
-  const volcanoesLink = "http://192.168.68.107:5253/volcanoes/";
-  const cratersLink = "http://192.168.68.107:5253/meteoricCraters/";
+  const volcanoesLink = "http://192.168.68.109:5253/volcanoes/";
+  const cratersLink = "http://192.168.68.109:5253/meteoricCraters/";
 
   const [ volcanoCoords, setVolcanoCoords ] = useState<LatLng[]>([]);
   const [ volcanoMarkers, setVolcanoMarkers ] = useState<any[]>([]);
@@ -60,7 +56,19 @@ export default function Map({ lat, lng }: Location) {
   }, []);
 
   useEffect(() => {
-    volcanoMarkerVisible && craterMarkerVisible ? setMarkers([...volcanoMarkers, ...craterMarkers]) : setMarkers([]);
+    if (volcanoMarkerVisible && craterMarkerVisible){
+      setMarkers([...volcanoMarkers, ...craterMarkers])
+    }
+    else if (volcanoMarkerVisible && !craterMarkerVisible){
+      setMarkers(volcanoMarkers)
+    }
+    else if (!volcanoMarkerVisible && craterMarkerVisible){
+      setMarkers(craterMarkers)
+    }
+    else {
+      setMarkers([])
+    }
+
   }, [volcanoMarkerVisible, craterMarkerVisible]);
 
   function getVolcanoes() {
@@ -126,21 +134,34 @@ export default function Map({ lat, lng }: Location) {
   }
 
   return (
-       
+    <View style={styles.container}>
       <LeafletView
         source={{ html: webViewContent }}
         doDebug={false}
         mapMarkers={markers}
       />
+      <View style={styles.buttonContainer}>
+        <Button
+          title="🌋"
+          color="#eeeeee"
+          onPress={() => setVolcanoMarkerVisibilty(!volcanoMarkerVisible)}/>
+          <Button
+          title="☄️"
+          color="#eeeeee"
+          onPress={() => setCraterMarkerVisibilty(!craterMarkerVisible)}/>
+      </View>
+    </View>
     );
 }
 
 const styles = StyleSheet.create({
-  map: {
-    position: "absolute",
-    top: "0%",
-    left: "0%",
-    right: 0,
-    bottom: 0,
+  container: {
+    flex: 1,
+    position: 'relative',
+    paddingTop: "3%",
   },
+  buttonContainer: {
+    width: "15%",
+    marginLeft: "85%",
+  }
 });

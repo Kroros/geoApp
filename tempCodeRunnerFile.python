@@ -1,0 +1,6 @@
+def function(n) -> None:
+    return n
+
+numbers = [10,23]
+
+print(f"The numbers are {numbers[0]} and {numbers[1]}")
