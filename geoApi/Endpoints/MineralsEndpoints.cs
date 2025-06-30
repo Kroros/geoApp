@@ -6,40 +6,39 @@ using geoApi.GCDist;
 using System.Text.Json;
 using geoApi.Dtos;
 using geoApi.Entities;
+using System.Threading.Tasks;
 
 namespace geoApi.Endpoints;
 
-public static class CraterEndpoints
+public static class MineralsEndpoints
 {
-    public static RouteGroupBuilder MapCraterEndpoints(this WebApplication app)
+    public static RouteGroupBuilder MapMineralsEndpoints(this WebApplication app)
     {
-        var group = app.MapGroup("meteoricCraters");
+        var group = app.MapGroup("minerals");
 
-        //GET all craters with known location
+        //GET all mineral deposits
         group.MapGet("/", async (GeoContext dbContext) =>
         {
-            var craters = await dbContext.MeteoricCraters
-                .Where(c => c.CraterLocation != null)
-                .Select(c => c.CraterToDto())
+            var deposits = await dbContext.Minerals
+                .Select(m => m.MinToDto())
                 .AsNoTracking()
                 .ToListAsync();
 
-            return Results.Ok(craters);
+            return Results.Ok(deposits);
         });
 
-        //GET nearest crater
+        //GET nearest deposit
         group.MapGet("/nearest", async (double lat, double lon, GeoContext dbContext) =>
         {
             var point = new Point(lon, lat) { SRID = 4326 };
 
-            var craters = await dbContext.MeteoricCraters
-                .Where(c => c.CraterLocation != null)
-                .Select(c => c.CraterToDto())
+            var deposits = await dbContext.Minerals
+                .Select(m => m.MinToDto())
                 .AsNoTracking()
                 .ToListAsync();
 
-            var nearest = craters
-                .OrderBy(c => point.GCDistance(new Point(c.CraterLon, c.CraterLat)))
+            var nearest = deposits
+                .OrderBy(m => point.GCDistance(new Point(m.DepLon, m.DepLat)))
                 .First();
 
             return Results.Ok(nearest);

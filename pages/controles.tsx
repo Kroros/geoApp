@@ -10,7 +10,6 @@ import {
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import * as Location from "expo-location";
-import { RouteProp } from '@react-navigation/native';
 import Config from "../app/config";
 import Modal from "../components/modal";
 import axios from "axios";
@@ -125,12 +124,19 @@ export default function Controles() {
 
     return(
         <SafeAreaView style={styles.container}>
-            <Text style={styles.texts}>
-                Current Location: {"\n"} {formatCoords(latitude, longitude)} {"\n"}
-            </Text>
-            <Text style={styles.texts}>
-                Current Altitude: {"\n"} {altitude}m
-            </Text>
+
+            {(latitude && longitude) && altitude ? (
+                <View>
+                    <Text style={styles.texts}>
+                        Current Location: {br} {formatCoords(latitude, longitude)} {br}
+                    </Text>
+                    <Text style={styles.texts}>
+                        Current Altitude: {br} {altitude}m {br}
+                    </Text>
+                </View>
+            ) : <ActivityIndicator size="large"/>}
+
+            
             <Button
                 title="Where is the nearest volcano?"
                 onPress={() => {

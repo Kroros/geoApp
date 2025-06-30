@@ -2,8 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using geoApi.Entities;
 using NetTopologySuite.Geometries;
 
-
-
 namespace geoApi.Data;
 
 class GeoContext : DbContext
@@ -15,6 +13,7 @@ class GeoContext : DbContext
     public DbSet<GeoLocation> Geolocations => Set<GeoLocation>();
     public DbSet<Fault> Faults => Set<Fault>();
     public DbSet<Crater> MeteoricCraters => Set<Crater>();
+    public DbSet<Mineral> Minerals => Set<Mineral>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

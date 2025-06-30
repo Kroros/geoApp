@@ -19,11 +19,11 @@ export default function Map({ lat, lng }: Location) {
 
   const [ volcanoCoords, setVolcanoCoords ] = useState<LatLng[]>([]);
   const [ volcanoMarkers, setVolcanoMarkers ] = useState<any[]>([]);
-  const [ volcanoMarkerVisible, setVolcanoMarkerVisibilty ] = useState<boolean>(true);
+  const [ volcanoMarkerVisible, setVolcanoMarkerVisibilty ] = useState<boolean>(false);
 
   const [ craterCoords, setCraterCoords ] = useState<LatLng[]>([]);
   const [ craterMarkers, setCraterMarkers ] = useState<any[]>([]);
-  const [ craterMarkerVisible, setCraterMarkerVisibilty ] = useState<boolean>(true);
+  const [ craterMarkerVisible, setCraterMarkerVisibilty ] = useState<boolean>(false);
 
   const [ markers, setMarkers ] = useState<any[]>([]);
 

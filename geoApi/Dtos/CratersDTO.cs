@@ -5,7 +5,7 @@ public record class CraterDto(
     string CraterName,
     double? CraterDiameter,
     double? CraterAge,
-    double? CraterLat,
-    double? CraterLon,
+    double CraterLat,
+    double CraterLon,
     string? AgeCertainty
 );
