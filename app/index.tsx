@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import * as Location from "expo-location";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Home from "@/pages/home";
 import Controles from "@/pages/controles";

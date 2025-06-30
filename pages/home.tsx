@@ -12,8 +12,6 @@ import React, { useState, useEffect } from "react";
 import * as Location from "expo-location";
 import Map from "../components/map";
 
-
-
 export default function Home() {
 
   const [location, setLocation] = useState<Location.LocationObject | null>(null);

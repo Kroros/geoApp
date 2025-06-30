@@ -5,6 +5,7 @@ import React, { useState, useEffect } from "react";
 import { Asset } from "expo-asset";
 import { LatLng, LeafletView } from "react-native-leaflet-view";
 import * as FileSystem from "expo-file-system";
+import Config from "../app/config";
 
 interface Location {
     lat: number;
@@ -13,8 +14,8 @@ interface Location {
 
 
 export default function Map({ lat, lng }: Location) {
-  const volcanoesLink = "http://192.168.68.109:5253/volcanoes/";
-  const cratersLink = "http://192.168.68.109:5253/meteoricCraters/";
+  const volcanoesLink = `${Config.SERVER_URL}/volcanoes`;
+  const cratersLink = `${Config.SERVER_URL}/meteoricCraters/`;
 
   const [ volcanoCoords, setVolcanoCoords ] = useState<LatLng[]>([]);
   const [ volcanoMarkers, setVolcanoMarkers ] = useState<any[]>([]);

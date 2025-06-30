@@ -5,11 +5,28 @@ import {
   StatusBar,
   SafeAreaView,
   Button,
-  ActivityIndicator
+  ActivityIndicator,
+  View
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import * as Location from "expo-location";
 import { RouteProp } from '@react-navigation/native';
+import Config from "../app/config";
+import Modal from "../components/modal";
+import axios from "axios";
+
+interface Coords {
+  lat: number,
+  lng: number
+}
+
+interface Volcano {
+    name: string,
+    type: string,
+    lastEruption: number,
+    location: Coords,
+    elevation: number
+}
 
 function formatCoords(lat: number, lng: number){
     let coords: string[] = ["", ""];
@@ -29,12 +46,41 @@ function formatCoords(lat: number, lng: number){
 
     coords[1] = (lng >= 0) ? `${lngDeg}° ${lngMin}' ${lngSec}" E` : `${-lngDeg}° ${-lngMin}' ${-lngSec}" W`;
 
-    return coords;
+    return `${coords[0]},    ${coords[1]}`;
 }
 
 export default function Controles() {
     const [location, setLocation] = useState<Location.LocationObject | null>(null);
     const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+    const [nearestVolc, setNearestVolc] = useState<Volcano>({
+        name: "",
+        type: "",
+        lastEruption: 0,
+        location: {lat: 0, lng: 0},
+        elevation: 0
+    });
+
+    function volcanoActivity(lastErup: number){
+        if (lastErup == -32768){
+            return "Active during the holocene, last eruption unknown";
+        }
+        else if (lastErup == -2147483647){
+            return "Inactive";
+        }
+        else{
+            if (lastErup < 0){
+                return `Active, last eruption in ${-lastErup}BCE`
+            }
+            else {
+                return `Active, last eruption ${lastErup}CE`
+            }
+        }
+    }
+
+    const [volcModalVisible, setVolcModalVisibility] = useState(false);
+
+    const br = "\n"; 
 
     useEffect(() => {
         async function getCurrentLocation() {
@@ -52,29 +98,70 @@ export default function Controles() {
         getCurrentLocation();
       }, [location]);
     
-      let latitude = Number(JSON.stringify(location?.coords.latitude));
-      let longitude = Number(JSON.stringify(location?.coords.longitude));
-      let altitude = Math.round(Number(JSON.stringify(location?.coords.altitude)));
+    let latitude = Number(JSON.stringify(location?.coords.latitude));
+    let longitude = Number(JSON.stringify(location?.coords.longitude));
+    let altitude = Math.round(Number(JSON.stringify(location?.coords.altitude)));
 
-      
+    const volcanoLink = `${Config.SERVER_URL}/volcanoes/nearest?lat=${latitude}&lon=${longitude}`
+
+    function getNearestVolcano() {
+        axios
+            .get(volcanoLink)
+            .then((response) => {
+                const responseData = response.data;
+
+                setNearestVolc({
+                    name: responseData.volcanoName,
+                    type: responseData.volcanoType,
+                    lastEruption: responseData.lastEruption,
+                    location: { lat: responseData.volcanoLat, lng: responseData.volcanoLon },
+                    elevation: responseData.volcanoElevation
+                });
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }
 
     return(
         <SafeAreaView style={styles.container}>
             <Text style={styles.texts}>
-                Current Location: {"\n"} {formatCoords(latitude, longitude)[0]}, {formatCoords(latitude, longitude)[1]} {"\n"}
+                Current Location: {"\n"} {formatCoords(latitude, longitude)} {"\n"}
             </Text>
             <Text style={styles.texts}>
                 Current Altitude: {"\n"} {altitude}m
             </Text>
             <Button
-                title="What is my location?"
-                onPress={() => console.log(formatCoords(-18.104087, -63.931540)[0], formatCoords(-18.104087, -63.931540)[1])}
+                title="Where is the nearest volcano?"
+                onPress={() => {
+                getNearestVolcano();
+                setVolcModalVisibility(!volcModalVisible);
+                }}
             />
             
             <Button
-                title="What is my altitude?"
+                title="Where is the nearest meteoric crater?"
                 onPress={() => console.log(`${altitude}`)}
             />
+            <Button
+                title="Link?"
+                onPress={() => console.log(`${Config.SERVER_URL}`)}
+            />
+
+            <Modal isVisible={volcModalVisible} children={
+                <View>
+                    <Text style={styles.texts}>
+                        The nearest volcano to your location is {nearestVolc.name} {br}{br}
+                        Volcano Location: {formatCoords(nearestVolc.location.lat, nearestVolc.location.lng)} {br}{br}
+                        Volcano Type: {nearestVolc.type} {br}{br}
+                        Volcano Activity: {volcanoActivity(nearestVolc.lastEruption)} {br}{br}
+                        Volcano maximum elevation: {nearestVolc.elevation} {br}
+                    </Text>
+                    <Button title="Close" onPress={() => setVolcModalVisibility(!volcModalVisible)}></Button>
+                </View>
+                
+                }>   
+            </Modal>
         </SafeAreaView>
     );
 }
