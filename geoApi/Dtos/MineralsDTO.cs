@@ -1,7 +1,7 @@
 namespace geoApi.Dtos;
 
 public record class MineralDto(
-    int Id,
+    int DepId,
     string DepName,
     string DepCountry,
     string DepCommodity,

@@ -6,7 +6,7 @@ namespace geoApi.Entities;
 public class Mineral
 {
     [Key]
-    public int Id { get; set; }
+    public int DepId { get; set; }
     public required Point DepLocation { get; set; }
     public required string DepName { get; set; }
     public required string DepCountry { get; set; }

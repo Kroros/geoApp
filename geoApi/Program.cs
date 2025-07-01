@@ -34,5 +34,6 @@ app.UseCors("AllowAll");
 
 app.MapVolcanoEndpoints();
 app.MapCraterEndpoints();
+app.MapMineralsEndpoints();
 
 app.Run();
