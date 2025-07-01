@@ -14,16 +14,18 @@ interface Location {
 
 
 export default function Map({ lat, lng }: Location) {
-  const volcanoesLink = `${Config.SERVER_URL}/volcanoes`;
+  const volcanoesLink = `${Config.SERVER_URL}/volcanoes/`;
   const cratersLink = `${Config.SERVER_URL}/meteoricCraters/`;
+  const depositsLink = `${Config.SERVER_URL}/minerals/`
 
-  const [ volcanoCoords, setVolcanoCoords ] = useState<LatLng[]>([]);
   const [ volcanoMarkers, setVolcanoMarkers ] = useState<any[]>([]);
   const [ volcanoMarkerVisible, setVolcanoMarkerVisibilty ] = useState<boolean>(false);
 
-  const [ craterCoords, setCraterCoords ] = useState<LatLng[]>([]);
   const [ craterMarkers, setCraterMarkers ] = useState<any[]>([]);
   const [ craterMarkerVisible, setCraterMarkerVisibilty ] = useState<boolean>(false);
+
+  const [ depositMarkers, setDepositMarkers ] = useState<any[]>([]);
+  const [ depositMarkerVisible, setDepositMarkerVisibility ] = useState<boolean>(false);
 
   const [ markers, setMarkers ] = useState<any[]>([]);
 
@@ -50,6 +52,7 @@ export default function Map({ lat, lng }: Location) {
     loadHtml();
     getVolcanoes();
     getCraters();
+    getDeposits();
 
     return () => {
       isMounted = false;
@@ -57,20 +60,21 @@ export default function Map({ lat, lng }: Location) {
   }, []);
 
   useEffect(() => {
-    if (volcanoMarkerVisible && craterMarkerVisible){
-      setMarkers([...volcanoMarkers, ...craterMarkers])
+    const newMarkers = [];
+
+    if (volcanoMarkerVisible){
+      newMarkers.push([...volcanoMarkers]);
     }
-    else if (volcanoMarkerVisible && !craterMarkerVisible){
-      setMarkers(volcanoMarkers)
+    if (craterMarkerVisible){
+      newMarkers.push([...craterMarkers]);
     }
-    else if (!volcanoMarkerVisible && craterMarkerVisible){
-      setMarkers(craterMarkers)
-    }
-    else {
-      setMarkers([])
+    if (depositMarkerVisible){
+      newMarkers.push([...depositMarkers]);
     }
 
-  }, [volcanoMarkerVisible, craterMarkerVisible]);
+    setMarkers(newMarkers);
+
+  }, [volcanoMarkerVisible, craterMarkerVisible, depositMarkerVisible]);
 
   function getVolcanoes() {
     axios
@@ -78,14 +82,9 @@ export default function Map({ lat, lng }: Location) {
       .then((response) => {
         const responseData = response.data;
 
-        const newCoords: LatLng[] = [];
         const newMarkers: any[] = [];
 
         responseData.slice().forEach((coord: any) => {
-          newCoords.push({
-            lat: coord.volcanolat,
-            lng: coord.volcanoLon
-          });
           newMarkers.push({
             position: { lat: coord.volcanoLat, lng: coord.volcanoLon },
             icon: "🌋",
@@ -93,7 +92,6 @@ export default function Map({ lat, lng }: Location) {
           });
         });
 
-        setVolcanoCoords(newCoords);
         setVolcanoMarkers(newMarkers);
       })
       .catch((error) => {
@@ -107,14 +105,9 @@ export default function Map({ lat, lng }: Location) {
       .then((response) => {
         const responseData = response.data;
 
-        const newCoords: LatLng[] = [];
         const newMarkers: any[] = [];
 
         responseData.slice().forEach((coord: any) => {
-          newCoords.push({
-            lat: coord.craterLat,
-            lng: coord.craterLon
-          });
           newMarkers.push({
             position: { lat: coord.craterLat, lng: coord.craterLon },
             icon: "☄️",
@@ -122,12 +115,34 @@ export default function Map({ lat, lng }: Location) {
           });
         });
 
-        setCraterCoords(newCoords);
         setCraterMarkers(newMarkers);
       })
       .catch((error) => {
         console.error(error);
       });
+  }
+
+  function getDeposits() {
+    axios
+      .get(depositsLink)
+      .then((response) => {
+        const responseData = response.data;
+
+        const newMarkers: any[] = [];
+
+        responseData.slice().forEach((coord: any) => {
+          newMarkers.push({
+            position: { lat: coord.depLat, lng: coord.depLon},
+            icon: "💎",
+            size: [32,32]
+          });
+        });
+
+        setDepositMarkers(newMarkers);
+      })
+      .catch((error) => {
+        console.log(error);
+      })
   }
 
   if (!webViewContent) {
@@ -146,10 +161,16 @@ export default function Map({ lat, lng }: Location) {
           title="🌋"
           color="#eeeeee"
           onPress={() => setVolcanoMarkerVisibilty(!volcanoMarkerVisible)}/>
-          <Button
-          title="☄️"
-          color="#eeeeee"
-          onPress={() => setCraterMarkerVisibilty(!craterMarkerVisible)}/>
+
+        <Button
+        title="☄️"
+        color="#eeeeee"
+        onPress={() => setCraterMarkerVisibilty(!craterMarkerVisible)}/>
+
+        <Button
+        title="💎"
+        color="#eeeeee"
+        onPress={() => setDepositMarkerVisibility(!depositMarkerVisible)}/>
       </View>
     </View>
     );
