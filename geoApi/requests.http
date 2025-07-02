@@ -2,11 +2,11 @@ GET http://192.168.68.109:5253/volcanoes/nearest?lat=52.214&lon=6.880
 
 ###
 
-GET http://192.168.68.109:5253/volcanoes/
+GET http://192.168.68.107:5253/volcanoes/
 
 ###
 
-GET http://192.168.68.109:5253/meteoricCraters/
+GET http://192.168.68.107:5253/meteoricCraters/
 
 ###
 
@@ -15,7 +15,7 @@ GET http://192.168.68.109:5253/meteoricCraters/nearest?lat=52.214&lon=6.880
 
 ###
 
-GET http://192.168.68.109:5253/minerals/
+GET http://192.168.68.107:5253/minerals/
 
 ###
 

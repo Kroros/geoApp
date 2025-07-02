@@ -44,6 +44,19 @@ public static class MineralsEndpoints
             return Results.Ok(nearest);
         });
 
+        //GET commodities
+
+        //GET deposits by commodity
+        group.MapGet("/byCommodity", async (string commodity, GeoContext dbContext) =>
+        {
+            var deposits = await dbContext.Minerals
+                .Select(m => m.MinToDto())
+                .AsNoTracking()
+                .ToListAsync();
+
+            return Results.Ok(deposits);
+        });
+
         return group;
     }
 }

@@ -40,7 +40,7 @@ export default function Home() {
   return (
       <SafeAreaView style={styles.container}>
           { latitude && longitude ? (
-              <Map lat={latitude} lng = {longitude} />
+              <Map />
           ) : <ActivityIndicator size="large"/> }
       </SafeAreaView>
   );
