@@ -44,17 +44,34 @@ public static class MineralsEndpoints
             return Results.Ok(nearest);
         });
 
-        //GET commodities
-
         //GET deposits by commodity
         group.MapGet("/byCommodity", async (string commodity, GeoContext dbContext) =>
         {
             var deposits = await dbContext.Minerals
+                .Where(m => m.DepCommodity.ToLower().Contains(commodity))
                 .Select(m => m.MinToDto())
                 .AsNoTracking()
                 .ToListAsync();
 
             return Results.Ok(deposits);
+        });
+
+        //GET nearest deposit by commodity
+        group.MapGet("/nearestByCommodity", async (string commodity, double lat, double lon, GeoContext dbContext) =>
+        {
+            var point = new Point(lon, lat) { SRID = 4326 };
+
+            var deposits = await dbContext.Minerals
+                .Where(m => m.DepCommodity.ToLower().Contains(commodity))
+                .Select(m => m.MinToDto())
+                .AsNoTracking()
+                .ToListAsync();
+
+            var nearest = deposits
+                .OrderBy(m => point.GCDistance(new Point(m.DepLon, m.DepLat)))
+                .First();
+
+            return Results.Ok(nearest);
         });
 
         return group;

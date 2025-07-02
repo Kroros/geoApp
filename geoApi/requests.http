@@ -20,3 +20,11 @@ GET http://192.168.68.107:5253/minerals/
 ###
 
 GET http://192.168.68.107:5253/minerals/nearest?lat=52.214&lon=6.880
+
+###
+
+GET http://192.168.68.107:5253/minerals/byCommodity?commodity=uranium
+
+###
+
+GET http://192.168.68.107:5253/minerals/nearestByCommodity?commodity=uranium&lat=52.214&lon=6.880
