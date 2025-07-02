@@ -15,7 +15,6 @@ public static class GeoExtensions
         double lat2 = p2.Y * Math.PI / 180;
         double lon2 = p2.X * Math.PI / 180;
 
-        double dLat = lat2 - lat1;
         double dLon = lon2 - lon1;
 
         double a = Math.Pow(Math.Cos(lat2) * Math.Sin(dLon), 2) +

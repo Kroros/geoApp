@@ -19,13 +19,13 @@ export default function Map({ lat, lng }: Location) {
   const depositsLink = `${Config.SERVER_URL}/minerals/`
 
   const [ volcanoMarkers, setVolcanoMarkers ] = useState<any[]>([]);
-  const [ volcanoMarkerVisible, setVolcanoMarkerVisibilty ] = useState<boolean>(false);
+  const [ volcanoMarkerVisible, setVolcanoMarkerVisibilty ] = useState<boolean>(true);
 
   const [ craterMarkers, setCraterMarkers ] = useState<any[]>([]);
-  const [ craterMarkerVisible, setCraterMarkerVisibilty ] = useState<boolean>(false);
+  const [ craterMarkerVisible, setCraterMarkerVisibilty ] = useState<boolean>(true);
 
   const [ depositMarkers, setDepositMarkers ] = useState<any[]>([]);
-  const [ depositMarkerVisible, setDepositMarkerVisibility ] = useState<boolean>(false);
+  const [ depositMarkerVisible, setDepositMarkerVisibility ] = useState<boolean>(true);
 
   const [ markers, setMarkers ] = useState<any[]>([]);
 
@@ -60,7 +60,7 @@ export default function Map({ lat, lng }: Location) {
   }, []);
 
   useEffect(() => {
-    const newMarkers = [];
+    /* const newMarkers = [];
 
     if (volcanoMarkerVisible){
       newMarkers.push([...volcanoMarkers]);
@@ -72,8 +72,13 @@ export default function Map({ lat, lng }: Location) {
       newMarkers.push([...depositMarkers]);
     }
 
-    setMarkers(newMarkers);
+    setMarkers(newMarkers); */
 
+   /*  if (volcanoMarkerVisible){
+      setMarkers(volcanoMarkers);
+    } */
+    
+    setMarkers([...volcanoMarkers, ...craterMarkers, ...depositMarkers])
   }, [volcanoMarkerVisible, craterMarkerVisible, depositMarkerVisible]);
 
   function getVolcanoes() {
