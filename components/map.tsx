@@ -10,13 +10,13 @@ import depositMarkersJson from "../assets/data/mineralMarkers.json" with { type:
 
 export default function Map() {
   const [ volcanoMarkers, setVolcanoMarkers ] = useState<any[]>([]);
-  const [ volcanoMarkerVisible, setVolcanoMarkerVisibilty ] = useState<boolean>(true);
+  const [ volcanoMarkerVisible, setVolcanoMarkerVisibilty ] = useState<boolean>(false);
 
   const [ craterMarkers, setCraterMarkers ] = useState<any[]>([]);
-  const [ craterMarkerVisible, setCraterMarkerVisibilty ] = useState<boolean>(true);
+  const [ craterMarkerVisible, setCraterMarkerVisibilty ] = useState<boolean>(false);
 
   const [ depositMarkers, setDepositMarkers ] = useState<any[]>([]);
-  const [ depositMarkerVisible, setDepositMarkerVisibility ] = useState<boolean>(true);
+  const [ depositMarkerVisible, setDepositMarkerVisibility ] = useState<boolean>(false);
 
   const [ markers, setMarkers ] = useState<any[]>([]);
 
@@ -51,25 +51,19 @@ export default function Map() {
   }, []);
 
   useEffect(() => {
-    /* const newMarkers = [];
+    let newMarkers: any[] = [];
 
-    if (volcanoMarkerVisible){
-      newMarkers.push([...volcanoMarkers]);
+    if (volcanoMarkerVisible) {
+      newMarkers = [...newMarkers, ...volcanoMarkers]
     }
-    if (craterMarkerVisible){
-      newMarkers.push([...craterMarkers]);
+    if (craterMarkerVisible) {
+      newMarkers = [...newMarkers, ...craterMarkers]
     }
-    if (depositMarkerVisible){
-      newMarkers.push([...depositMarkers]);
+    if (depositMarkerVisible) {
+      newMarkers = [...newMarkers, ...depositMarkers]
     }
 
-    setMarkers(newMarkers); */
-
-   /*  if (volcanoMarkerVisible){
-      setMarkers(volcanoMarkers);
-    } */
-    
-    setMarkers([...volcanoMarkers, ...craterMarkers, ...depositMarkers])
+    setMarkers(newMarkers);
   }, [volcanoMarkerVisible, craterMarkerVisible, depositMarkerVisible]);
 
   if (!webViewContent) {
