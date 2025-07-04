@@ -1,10 +1,7 @@
 import {
-  StyleSheet,
-  Text,
-  View,
-  Button,
+  StyleSheet
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import RNModal from "react-native-modal";
 
 interface ModalProps {

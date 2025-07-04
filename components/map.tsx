@@ -2,25 +2,25 @@ import { StyleSheet, Alert, ActivityIndicator, Button, View, Platform, StatusBar
 import * as Location from 'expo-location';
 import React, { useState, useEffect } from "react";
 import { Asset } from "expo-asset";
-import { LatLng, LeafletView } from "react-native-leaflet-view";
+import { LatLng, LeafletView, MapMarker } from "react-native-leaflet-view";
 import * as FileSystem from "expo-file-system";
 import volcanoMarkersJson from "../assets/data/volcanoMarkers.json" with { type: 'json' };
 import craterMarkersJson from "../assets/data/craterMarkers.json" with { type: 'json' };
 import depositMarkersJson from "../assets/data/mineralMarkers.json" with { type: 'json' };
 
 export default function Map() {
-  const [ volcanoMarkers, setVolcanoMarkers ] = useState<any[]>([]);
+  const [ volcanoMarkers, setVolcanoMarkers ] = useState<MapMarker[]>([]);
   const [ volcanoMarkerVisible, setVolcanoMarkerVisibilty ] = useState<boolean>(false);
 
-  const [ craterMarkers, setCraterMarkers ] = useState<any[]>([]);
+  const [ craterMarkers, setCraterMarkers ] = useState<MapMarker[]>([]);
   const [ craterMarkerVisible, setCraterMarkerVisibilty ] = useState<boolean>(false);
 
-  const [ depositMarkers, setDepositMarkers ] = useState<any[]>([]);
+  const [ depositMarkers, setDepositMarkers ] = useState<MapMarker[]>([]);
   const [ depositMarkerVisible, setDepositMarkerVisibility ] = useState<boolean>(false);
 
-  const [ markers, setMarkers ] = useState<any[]>([]);
+  const [ markers, setMarkers ] = useState<MapMarker[]>([]);
 
-  const [webViewContent, setWebViewContent] = useState<string | null>(null);
+  const [ webViewContent, setWebViewContent ] = useState<string | null>(null);
   useEffect(() => {
     let isMounted = true;
 

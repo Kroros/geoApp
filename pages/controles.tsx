@@ -13,6 +13,7 @@ import * as Location from "expo-location";
 import Config from "../app/config";
 import Modal from "../components/modal";
 import axios from "axios";
+import SearchBar from "@/components/searchbar";
 
 interface Coords {
   lat: number,
@@ -128,10 +129,10 @@ function gcDistance(p1: Coords, p2: Coords){
 }
 
 export default function Controles() {
-    const [location, setLocation] = useState<Location.LocationObject | null>(null);
-    const [errorMsg, setErrorMsg] = useState<string | null>(null);
+    const [ location, setLocation ] = useState<Location.LocationObject | null>(null);
+    const [ errorMsg, setErrorMsg ] = useState<string | null>(null);
 
-    const [nearestVolc, setNearestVolc] = useState<Volcano>({
+    const [ nearestVolc, setNearestVolc ] = useState<Volcano>({
         name: "",
         type: "",
         lastEruption: 0,
@@ -139,7 +140,7 @@ export default function Controles() {
         elevation: 0
     });
 
-    const [nearestCrater, setNearestCrater] = useState<Crater>({
+    const [ nearestCrater, setNearestCrater ] = useState<Crater>({
         id: 0,
         name: "",
         diameter: 0,
@@ -148,7 +149,7 @@ export default function Controles() {
         ageCertainty: ""
     });
 
-    const [nearestDeposit, setNearestDeposit] = useState<Deposit>({
+    const [ nearestDeposit, setNearestDeposit ] = useState<Deposit>({
         name: "",
         country: "",
         type: "",
@@ -156,11 +157,12 @@ export default function Controles() {
         commodity: ""
     });
 
-    
+    const [ searchQuery, setSearchQuery ] = useState<string>("")
+    const [ searchVis, setSearchVis ] = useState<boolean>(false);
 
-    const [volcModalVisible, setVolcModalVisibility] = useState(false);
-    const [craterModVis, setCraterModVis] = useState(false);
-    const [depModVis, setDepModVis] = useState(false);
+    const [ volcModalVisible, setVolcModalVisibility ] = useState<boolean>(false);
+    const [ craterModVis, setCraterModVis ] = useState<boolean>(false);
+    const [ depModVis, setDepModVis ] = useState<boolean>(false);
 
     const br = "\n"; 
 
@@ -248,6 +250,15 @@ export default function Controles() {
 
     return(
         <SafeAreaView style={styles.container}>
+            <SearchBar
+                onFocus={() => console.log("focus")}
+                containerStyle={styles.searchBar}
+                inputContainerStyle={styles.searchBar}
+                inputStyle={styles.searchBar}
+                onChangeText={(text) => setSearchQuery(text)}
+                value={searchQuery}
+                onClear={() => console.log("clear")}
+            ></SearchBar>
 
             {(latitude && longitude) && altitude ? (
                 <View>
@@ -349,5 +360,8 @@ const  styles = StyleSheet.create({
         width: "90%",
         marginLeft: "5%",
         borderWidth: 2,
-    }
+    },
+    searchBar: {
+        backgroundColor: "#FFF",
+    },
 })

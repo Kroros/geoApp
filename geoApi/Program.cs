@@ -1,7 +1,6 @@
 using geoApi.Data;
 using geoApi.Endpoints;
 using Microsoft.EntityFrameworkCore;
-using NetTopologySuite;
 
 var builder = WebApplication.CreateBuilder(args);
 
