@@ -45,6 +45,18 @@ public static class CraterEndpoints
             return Results.Ok(nearest);
         });
 
+        //GET craters with like name
+        group.MapGet("/search", async (string search, GeoContext dbContext) =>
+        {
+            var craters = await dbContext.MeteoricCraters
+                .Where(c => c.CraterName.ToLower().Contains(search))
+                .Select(c => c.CraterToDto())
+                .AsNoTracking()
+                .ToListAsync();
+
+            return Results.Ok(craters);
+        });
+
         return group;
     }
 }

@@ -28,3 +28,15 @@ GET http://192.168.68.107:5253/minerals/byCommodity?commodity=uranium
 ###
 
 GET http://192.168.68.107:5253/minerals/nearestByCommodity?commodity=uranium&lat=52.214&lon=6.880
+
+###
+
+GET http://192.168.68.107:5253/meteoricCraters/search?search=chic
+
+###
+
+GET http://192.168.68.107:5253/volcanoes/search?search=rod
+
+###
+
+GET http://192.168.68.107:5253/minerals/search?search=wan

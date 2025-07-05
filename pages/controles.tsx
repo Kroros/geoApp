@@ -13,7 +13,8 @@ import * as Location from "expo-location";
 import Config from "../app/config";
 import Modal from "../components/modal";
 import axios from "axios";
-import SearchBar from "@/components/searchbar";
+import SearchBarC from "@/components/searchbar";
+import { SearchBar } from "react-native-screens";
 
 interface Coords {
   lat: number,
@@ -250,15 +251,12 @@ export default function Controles() {
 
     return(
         <SafeAreaView style={styles.container}>
-            <SearchBar
-                onFocus={() => console.log("focus")}
+            <SearchBarC
                 containerStyle={styles.searchBar}
                 inputContainerStyle={styles.searchBar}
                 inputStyle={styles.searchBar}
-                onChangeText={(text) => setSearchQuery(text)}
-                value={searchQuery}
                 onClear={() => console.log("clear")}
-            ></SearchBar>
+            ></SearchBarC>
 
             {(latitude && longitude) && altitude ? (
                 <View>
@@ -268,32 +266,33 @@ export default function Controles() {
                     <Text style={styles.texts}>
                         Current Altitude: {br} {altitude}m {br}
                     </Text>
+                    <Button
+                        title="Where is the nearest volcano?"
+                        onPress={() => {
+                        getNearestVolcano();
+                        setVolcModalVisibility(!volcModalVisible);
+                        }}
+                    />
+                    
+                    <Button
+                        title="Where is the nearest meteoric crater?"
+                        onPress={() => {
+                            getNearestCrater();
+                            setCraterModVis(!craterModVis);
+                        }}
+                    />
+                    <Button
+                        title="Where is the nearest mineral deposit?"
+                        onPress={() => {
+                            getNearestDeposit();
+                            setDepModVis(!depModVis);
+                        }}
+                    />
                 </View>
-            ) : <ActivityIndicator size="large"/>}
+            ) : <Text>Finding Location...</Text>}
 
             
-            <Button
-                title="Where is the nearest volcano?"
-                onPress={() => {
-                getNearestVolcano();
-                setVolcModalVisibility(!volcModalVisible);
-                }}
-            />
             
-            <Button
-                title="Where is the nearest meteoric crater?"
-                onPress={() => {
-                    getNearestCrater();
-                    setCraterModVis(!craterModVis);
-                }}
-            />
-            <Button
-                title="Where is the nearest mineral deposit?"
-                onPress={() => {
-                    getNearestDeposit();
-                    setDepModVis(!depModVis);
-                }}
-            />
 
             <Modal isVisible={volcModalVisible} children={
                 <View style={styles.popup}>

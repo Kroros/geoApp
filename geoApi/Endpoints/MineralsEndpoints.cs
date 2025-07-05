@@ -74,6 +74,18 @@ public static class MineralsEndpoints
             return Results.Ok(nearest);
         });
 
+        //GET deposits with like name
+        group.MapGet("/search", async (string search, GeoContext dbContext) =>
+        {
+            var minerals = await dbContext.Minerals
+                .Where(m => m.DepName.ToLower().Contains(search))
+                .Select(m => m.MinToDto())
+                .AsNoTracking()
+                .ToListAsync();
+
+            return Results.Ok(minerals);
+        });
+
         return group;
     }
 }

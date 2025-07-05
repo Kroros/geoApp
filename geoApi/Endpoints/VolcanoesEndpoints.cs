@@ -44,6 +44,18 @@ public static class VolcanoEndpoints
             return Results.Ok(volcanoes);
         });
 
+        //GET volcanoes with like name
+        group.MapGet("/search", async (string search, GeoContext dbContext) =>
+        {
+            var volcanoes = await dbContext.Volcanoes
+                .Where(v => v.VolcanoName.ToLower().Contains(search))
+                .Select(v => v.VolToDto())
+                .AsNoTracking()
+                .ToListAsync();
+
+            return Results.Ok(volcanoes);
+        });
+
         return group;
     }
 }
