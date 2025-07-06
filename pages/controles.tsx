@@ -14,7 +14,6 @@ import Config from "../app/config";
 import Modal from "../components/modal";
 import axios from "axios";
 import SearchBarC from "@/components/searchbar";
-import { SearchBar } from "react-native-screens";
 
 interface Coords {
   lat: number,
@@ -251,12 +250,7 @@ export default function Controles() {
 
     return(
         <SafeAreaView style={styles.container}>
-            <SearchBarC
-                containerStyle={styles.searchBar}
-                inputContainerStyle={styles.searchBar}
-                inputStyle={styles.searchBar}
-                onClear={() => console.log("clear")}
-            ></SearchBarC>
+            <SearchBarC/>
 
             {(latitude && longitude) && altitude ? (
                 <View>

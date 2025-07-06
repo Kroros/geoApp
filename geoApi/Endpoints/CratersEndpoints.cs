@@ -49,7 +49,7 @@ public static class CraterEndpoints
         group.MapGet("/search", async (string search, GeoContext dbContext) =>
         {
             var craters = await dbContext.MeteoricCraters
-                .Where(c => c.CraterName.ToLower().Contains(search))
+                .Where(c => c.CraterName.ToLower().Contains(search) && (c.CraterLocation != null))
                 .Select(c => c.CraterToDto())
                 .AsNoTracking()
                 .ToListAsync();

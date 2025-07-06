@@ -39,4 +39,4 @@ GET http://192.168.68.107:5253/volcanoes/search?search=rod
 
 ###
 
-GET http://192.168.68.107:5253/minerals/search?search=atlantic coastal
+GET http://192.168.68.107:5253/minerals/search?search=wan
