@@ -13,6 +13,10 @@ builder.Services.AddDbContext<GeoContext>(options =>
 }
 );
 
+builder.Services.Configure<SearchDefaults>(
+    builder.Configuration.GetSection("SearchDefaults")
+);
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
@@ -34,5 +38,6 @@ app.UseCors("AllowAll");
 app.MapVolcanoEndpoints();
 app.MapCraterEndpoints();
 app.MapMineralsEndpoints();
+app.MapSearchEndpoints();
 
 app.Run();

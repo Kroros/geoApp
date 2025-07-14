@@ -17,6 +17,7 @@ type Coords = {
 }
 
 type Volcano = {
+    fType: string,
     id: number,
     name: string,
     type: string,
@@ -26,6 +27,7 @@ type Volcano = {
 }
 
 type Crater = {
+    fType: string,
     id: number,
     name: string,
     diameter: number,
@@ -35,6 +37,7 @@ type Crater = {
 }
 
 type Deposit = {
+    fType: string,
     id: number,
     name: string,
     country: string,
@@ -93,6 +96,7 @@ export default function SearchBarC() {
             responseData.slice().forEach((obj: any) => {
                     if ("lastEruption" in obj){
                         results.push({
+                            fType: "volcano",
                             id: obj.id,
                             name: obj.volcanoName,
                             type: obj.volcanoType,
@@ -103,6 +107,7 @@ export default function SearchBarC() {
                     }
                     else if ("craterDiameter" in obj){
                         results.push({
+                            fType: "crater",
                             id: obj.craterId,
                             name: obj.craterName,
                             diameter: obj.craterDiameter,
@@ -113,6 +118,7 @@ export default function SearchBarC() {
                     }
                     else if ("depCommodity" in obj){
                         results.push({
+                            fType: "deposit",
                             id: obj.depId,
                             name: obj.depName,
                             country: obj.depCountry,
