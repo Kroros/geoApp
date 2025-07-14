@@ -3,9 +3,6 @@ using geoApi.Mapping;
 using NetTopologySuite.Geometries;
 using Microsoft.EntityFrameworkCore;
 using geoApi.GCDist;
-using System.Text.Json;
-using geoApi.Dtos;
-using geoApi.Entities;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Mvc;
 

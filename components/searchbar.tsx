@@ -4,12 +4,15 @@ import {
     ScrollView,
     Text,
     StyleSheet,
+    Button,
     TouchableWithoutFeedback,
     Platform,
 } from "react-native";
 import { SearchBar } from '@rneui/themed';
 import axios from "axios";
 import Config from "../app/config";
+import Modal from "./modal";
+import MultiSlider from "@ptomasroos/react-native-multi-slider";
 
 type Coords = {
   lat: number,
@@ -52,6 +55,14 @@ export default function SearchBarC() {
     const [ query, setQuery ] = useState<string>("");
     const [ dropDownVis, setDropDownVis ] = useState<boolean>(false);
     const [ dropDown, setDropDown ] = useState<ReactNode>();
+    const [ filtersVis, setFiltersVis ] =useState<boolean>(false);
+
+    const [ features, setFeatures ] = useState<string[]>(["volcanoes", "impactCraters", "mineralDeposits"])
+    const [ countries, setCountries ] = useState<string[]>(Config.DEFAULT_COUNTRY_SELECTION)
+    const [ commodities, setCommodities ] = useState<string[]>(Config.DEFAULT_COMMODITY_SELECTION)
+    const [ elevation, setElevation ] = useState<number[]>([-6000, 7000])
+    const [ diameter, setDiameter ] = useState<number[]>([0, 100])
+    const [ distance, setDistance ] = useState<number[]>([0, 20000])
 
     const abortControllerRef = useRef<AbortController | null>(null);
 
@@ -191,6 +202,26 @@ export default function SearchBarC() {
 
     return (
         <View style={styles.containerStyle}>
+            <Button title="Filters" onPress={() => setFiltersVis(true)}></Button>
+
+            {(distance[0] != 0 || distance[1] != 20000) && 
+            <View>
+                <Text>Feature Distance: {distance[0]} - {distance[1]}</Text>
+                <Button title="Clear Distance Filter" onPress={() => setDistance([0, 20000])}/>
+            </View>}
+
+            {(diameter[0] != 0 || diameter[1] != 100) && 
+            <View>
+                <Text>Crater Diameter: {diameter[0]} - {diameter[1]}</Text>
+                <Button title="Clear Diameter Filter" onPress={() => setDiameter([0, 100])}/>
+            </View>}
+
+            {(elevation[0] != -6000 || elevation[1] != 7000) && 
+            <View>
+                <Text>Volcano Elevation: {elevation[0]} - {elevation[1]}</Text>
+                <Button title="Clear Elevation Filter" onPress={() => setElevation([-6000, 7000])}/>
+            </View>}
+
             <SearchBar
                 containerStyle={styles.searchBarContainer}
                 inputStyle={styles.searchBarInput}
@@ -208,6 +239,50 @@ export default function SearchBarC() {
                     setDropDownVis(false);
                 }}
             ></SearchBar>
+            <Modal isVisible={filtersVis}>
+                <ScrollView contentContainerStyle = {{alignItems: "center"}} style={styles.filtersContainer}>
+                    <Button title="Done" onPress={() => setFiltersVis(false)}></Button>
+                    <Text style={styles.textColour}>Minimal Distance:{distance[0]}km</Text>
+                    <Text style={styles.textColour}>Maximal Distance:{distance[1]}km</Text>
+                    <MultiSlider
+                        min = {0}
+                        max = {20000}
+                        step = {100}
+                        isMarkersSeparated = {true}
+                        values = {[0, 20000]}
+                        onValuesChange={setDistance}
+                        touchDimensions={{height: 250,width: 250,borderRadius: 15,slipDisplacement: 200}}
+                    ></MultiSlider>
+
+                    <View style={styles.horizontalRule}></View>
+
+                    <Text style={styles.textColour}>Minimal Crater Diameter:{diameter[0]}km</Text>
+                    <Text style={styles.textColour}>Maximal Crater Diameter:{diameter[1]}km</Text>
+                    <MultiSlider
+                        min = {0}
+                        max = {100}
+                        step = {1}
+                        isMarkersSeparated = {true}
+                        values = {[0, 20000]}
+                        onValuesChange={setDiameter}
+                        touchDimensions={{height: 250,width: 250,borderRadius: 15,slipDisplacement: 200}}
+                    ></MultiSlider>
+
+                    <View style={styles.horizontalRule}></View>
+
+                    <Text style={styles.textColour}>Minimal Volcano Elevation:{elevation[0]}m</Text>
+                    <Text style={styles.textColour}>Maximal Volcano Elevation:{elevation[1]}m</Text>
+                    <MultiSlider
+                        min = {-6000}
+                        max = {7000}
+                        step = {50}
+                        isMarkersSeparated = {true}
+                        values = {[-6000, 7000]}
+                        onValuesChange={setElevation}
+                        touchDimensions={{height: 250,width: 250,borderRadius: 15,slipDisplacement: 200}}
+                    ></MultiSlider>
+                </ScrollView>
+            </Modal>
 
             {dropDownVis && dropDown}
         </View>
@@ -252,5 +327,16 @@ const styles = StyleSheet.create({
     },
     containerStyle: {
 
+    },
+    textColour: {
+        color: "black"
+    },
+    filtersContainer: {
+        backgroundColor: "white",
+        alignContent: "center",
+    },
+    horizontalRule: {
+        borderBottomColor:"black", 
+        borderBottomWidth: StyleSheet.hairlineWidth,
     }
 })
