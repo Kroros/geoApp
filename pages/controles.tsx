@@ -6,7 +6,8 @@ import {
   SafeAreaView,
   Button,
   ActivityIndicator,
-  View
+  View,
+  ScrollView
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import * as Location from "expo-location";
@@ -249,9 +250,7 @@ export default function Controles() {
     }
 
     return(
-        <SafeAreaView style={styles.container}>
-            <SearchBarC/>
-
+        <ScrollView style={styles.container}>
             {(latitude && longitude) && altitude ? (
                 <View>
                     <Text style={styles.texts}>
@@ -284,6 +283,8 @@ export default function Controles() {
                     />
                 </View>
             ) : <Text>Finding Location...</Text>}
+
+            <SearchBarC/>
 
             
             
@@ -336,7 +337,7 @@ export default function Controles() {
                 
                 }>   
             </Modal>
-        </SafeAreaView>
+        </ScrollView>
     );
 }
 

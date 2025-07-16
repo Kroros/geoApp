@@ -13,6 +13,9 @@ import axios from "axios";
 import Config from "../app/config";
 import Modal from "./modal";
 import MultiSlider from "@ptomasroos/react-native-multi-slider";
+import BouncyCheckbox from "react-native-bouncy-checkbox";
+import CountriesFilters from "./countriesFilters";
+import CommoditiesFilters from "./commoditiesFilter";
 
 type Coords = {
   lat: number,
@@ -55,7 +58,9 @@ export default function SearchBarC() {
     const [ query, setQuery ] = useState<string>("");
     const [ dropDownVis, setDropDownVis ] = useState<boolean>(false);
     const [ dropDown, setDropDown ] = useState<ReactNode>();
-    const [ filtersVis, setFiltersVis ] =useState<boolean>(false);
+    const [ filtersVis, setFiltersVis ] = useState<boolean>(false);
+    const [ countriesList, setCountriesList ] = useState<boolean>(false);
+    const [ commoditiesList, setCommoditiesList ] = useState<boolean>(false);
 
     const [ features, setFeatures ] = useState<string[]>(["volcanoes", "impactCraters", "mineralDeposits"])
     const [ countries, setCountries ] = useState<string[]>(Config.DEFAULT_COUNTRY_SELECTION)
@@ -204,23 +209,22 @@ export default function SearchBarC() {
         <View style={styles.containerStyle}>
             <Button title="Filters" onPress={() => setFiltersVis(true)}></Button>
 
-            {(distance[0] != 0 || distance[1] != 20000) && 
             <View>
-                <Text>Feature Distance: {distance[0]} - {distance[1]}</Text>
-                <Button title="Clear Distance Filter" onPress={() => setDistance([0, 20000])}/>
-            </View>}
+                {(distance[0] != 0 || distance[1] != 20000) && 
+                <View>
+                    <Button title={`Feature Distance: ${distance[0]} - ${distance[1]}`} onPress={() => setDistance([0, 20000])}/>
+                </View>}
 
-            {(diameter[0] != 0 || diameter[1] != 100) && 
-            <View>
-                <Text>Crater Diameter: {diameter[0]} - {diameter[1]}</Text>
-                <Button title="Clear Diameter Filter" onPress={() => setDiameter([0, 100])}/>
-            </View>}
+                {(diameter[0] != 0 || diameter[1] != 100) && 
+                <View>
+                    <Button title={`Crater Diameter: ${diameter[0]} - ${diameter[1]}`} onPress={() => setDiameter([0, 100])}/>
+                </View>}
 
-            {(elevation[0] != -6000 || elevation[1] != 7000) && 
-            <View>
-                <Text>Volcano Elevation: {elevation[0]} - {elevation[1]}</Text>
-                <Button title="Clear Elevation Filter" onPress={() => setElevation([-6000, 7000])}/>
-            </View>}
+                {(elevation[0] != -6000 || elevation[1] != 7000) && 
+                <View>
+                    <Button title={`Volcano Elevation: ${elevation[0]} - ${elevation[1]}`} onPress={() => setElevation([-6000, 7000])}/>
+                </View>}
+            </View>
 
             <SearchBar
                 containerStyle={styles.searchBarContainer}
@@ -242,7 +246,7 @@ export default function SearchBarC() {
             <Modal isVisible={filtersVis}>
                 <ScrollView contentContainerStyle = {{alignItems: "center"}} style={styles.filtersContainer}>
                     <Button title="Done" onPress={() => setFiltersVis(false)}></Button>
-                    <Text style={styles.textColour}>Minimal Distance:{distance[0]}km</Text>
+                    <Text style={styles.filtersText}>Minimal Distance:{distance[0]}km</Text>
                     <Text style={styles.textColour}>Maximal Distance:{distance[1]}km</Text>
                     <MultiSlider
                         min = {0}
@@ -256,7 +260,7 @@ export default function SearchBarC() {
 
                     <View style={styles.horizontalRule}></View>
 
-                    <Text style={styles.textColour}>Minimal Crater Diameter:{diameter[0]}km</Text>
+                    <Text style={styles.filtersText}>Minimal Crater Diameter:{diameter[0]}km</Text>
                     <Text style={styles.textColour}>Maximal Crater Diameter:{diameter[1]}km</Text>
                     <MultiSlider
                         min = {0}
@@ -270,7 +274,7 @@ export default function SearchBarC() {
 
                     <View style={styles.horizontalRule}></View>
 
-                    <Text style={styles.textColour}>Minimal Volcano Elevation:{elevation[0]}m</Text>
+                    <Text style={styles.filtersText}>Minimal Volcano Elevation:{elevation[0]}m</Text>
                     <Text style={styles.textColour}>Maximal Volcano Elevation:{elevation[1]}m</Text>
                     <MultiSlider
                         min = {-6000}
@@ -281,6 +285,22 @@ export default function SearchBarC() {
                         onValuesChange={setElevation}
                         touchDimensions={{height: 250,width: 250,borderRadius: 15,slipDisplacement: 200}}
                     ></MultiSlider>
+
+                    <View style={styles.horizontalRule}></View>
+
+                    <Button title="Search in countries:" onPress={() => setCountriesList(!countriesList)}></Button>
+
+                    {countriesList && <CountriesFilters/>}
+
+                    <View style={styles.horizontalRule}></View>
+
+                    <Button title="Commodities of deposits:" onPress={() => setCommoditiesList(!commoditiesList)}></Button>
+
+                    {commoditiesList && <CommoditiesFilters/>}
+
+                    
+
+                    
                 </ScrollView>
             </Modal>
 
@@ -336,7 +356,13 @@ const styles = StyleSheet.create({
         alignContent: "center",
     },
     horizontalRule: {
-        borderBottomColor:"black", 
-        borderBottomWidth: StyleSheet.hairlineWidth,
+        width: "95%",
+        borderBottomColor:"gray", 
+        borderBottomWidth: 1,
+        paddingBottom: "2.5%",
+    },
+    filtersText: {
+        color: "black",
+        paddingTop: "5%"
     }
 })
