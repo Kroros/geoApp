@@ -43,8 +43,12 @@ GET http://192.168.68.107:5253/minerals/search?search=wan
 
 ###
 
-GET http://192.168.68.107:5253/search/?lat=52.214&lng=6.880&query=he&geoFeature=volcanoes&minElevation=1000&maxElevation=2000&maxDistance=0
+GET http://192.168.68.107:5253/search/?lat=52.214&lng=6.880&query=he&geoFeature=volcanoes&minElevation=1000&maxElevation=2000&maxDistance=10000000
 
 ###
 
 GET http://192.168.68.107:5253/search/?lat=52.214&lng=6.880&query=e&geoFeature=mineralDeposits&commodities=iron
+
+###
+
+GET http://192.168.68.107:5253/search/?lat=52.1896398&lng=6.8819116&query=r&minElevation=950&maxElevation=2000&minDistance=0&maxDistance=10000000&geoFeature=volcanoes

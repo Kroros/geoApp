@@ -284,7 +284,10 @@ export default function Controles() {
                 </View>
             ) : <Text>Finding Location...</Text>}
 
-            <SearchBarC/>
+            <SearchBarC 
+                lat={latitude}
+                lng={longitude}
+            />
 
             
             
