@@ -1,82 +1,25 @@
-import React, { useState, useEffect, ReactNode, useRef } from "react";
-import {
-    View,
-    ScrollView,
-    Text,
-    StyleSheet,
-    Button,
-    TouchableWithoutFeedback,
-    Platform,
-} from "react-native";
-import { SearchBar } from '@rneui/themed';
-import axios from "axios";
-import Config from "../app/config";
-import Modal from "./modal";
+import {formatCoords} from "@/extensions/formatting";
 import MultiSlider from "@ptomasroos/react-native-multi-slider";
-import BouncyCheckbox from "react-native-bouncy-checkbox";
-import CountriesFilters from "./countriesFilters";
+import { SearchBar } from '@rneui/themed';
+import React, { ReactNode, useEffect, useRef, useState } from "react";
+import {
+    Button,
+    Platform,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableWithoutFeedback,
+    View,
+} from "react-native";
+import useArrayFilters from "../hooks/useArrayFilters";
+import useSearchLogic from "../hooks/useSearchLogic";
+import type { Coords, Crater, Deposit, Filter, Volcano } from "../types/types";
 import CommoditiesFilters from "./commoditiesFilter";
+import CountriesFilters from "./countriesFilters";
 import FeaturesFilter from "./featureFilter";
-
-type Coords = {
-  lat: number,
-  lng: number
-}
-
-type Volcano = {
-    fType: string,
-    id: number,
-    name: string,
-    type: string,
-    lastEruption: number,
-    location: Coords,
-    elevation: number
-}
-
-type Crater = {
-    fType: string,
-    id: number,
-    name: string,
-    diameter: number,
-    age: number,
-    location: Coords,
-    ageCertainty: string
-}
-
-type Deposit = {
-    fType: string,
-    id: number,
-    name: string,
-    country: string,
-    type: string,
-    location: Coords,
-    commodity: string
-}
-
-function formatCoords(lat: number, lng: number){
-    let coords: string[] = ["", ""];
-    let latSec: number = Math.round(lat * 3600);
-    let lngSec: number = Math.round(lng * 3600);
-
-    let latMin: number = ( ( latSec % 3600 ) - ((latSec % 3600) % 60) ) / 60;
-    let lngMin: number = ( ( lngSec % 3600 ) - ((lngSec % 3600) % 60) ) / 60;
-
-    let latDeg: number = ( latSec - ( latSec % 3600 ) ) / 3600;
-    let lngDeg: number = ( lngSec - ( lngSec % 3600 ) ) / 3600;
-
-    latSec = ( ( latSec % 3600 ) % 60 );
-    lngSec = lngSec = ( ( lngSec % 3600 ) % 60 );
-
-    coords[0] = (lat >= 0) ? `${latDeg}° ${latMin}' ${latSec}" N` : `${-latDeg}° ${-latMin}' ${-latSec}" S`;
-
-    coords[1] = (lng >= 0) ? `${lngDeg}° ${lngMin}' ${lngSec}" E` : `${-lngDeg}° ${-lngMin}' ${-lngSec}" W`;
-
-    return `${coords[0]},    ${coords[1]}`;
-}
+import Modal from "./modal";
 
 export default function SearchBarC({ lat, lng }: Coords) {
-    const serverLink = `${Config.SERVER_URL}`
-
     const [ query, setQuery ] = useState<string>("");
     const [ dropDownVis, setDropDownVis ] = useState<boolean>(false);
     const [ dropDown, setDropDown ] = useState<ReactNode>();
@@ -91,6 +34,14 @@ export default function SearchBarC({ lat, lng }: Coords) {
     const [ diameter, setDiameter ] = useState<number[]>([0, 100])
     const [ distance, setDistance ] = useState<number[]>([0, 20000])
 
+    const filters: Filter = {
+        features: features,
+        countries: countries,
+        commodities: commodities,
+        elevation: elevation,
+        diameter: diameter,
+        distance: distance
+    }
 
     const [ featuresLinkAppendix, setFeaturesLinkAppendix ] = useState<string>("");
     const [ countriesLinkAppendix, setCountriesLinkAppendix ] = useState<string>("");
@@ -98,35 +49,11 @@ export default function SearchBarC({ lat, lng }: Coords) {
 
     const abortControllerRef = useRef<AbortController | null>(null);
 
-    useEffect( () => {
-        let queryAppendix: string = ``;
+    useArrayFilters("geoFeature", features, setFeaturesLinkAppendix);
 
-        features.forEach(f => {
-            queryAppendix += `&geoFeature=${f}`;
-        });
+    useArrayFilters("countries", countries, setCountriesLinkAppendix);
 
-        setFeaturesLinkAppendix(queryAppendix);
-    }, [features]);
-
-    useEffect( () => {
-        let queryAppendix: string = ``;
-
-        countries.forEach(c => {
-            queryAppendix += `&countries=${c}`;
-        });
-
-        setCountriesLinkAppendix(queryAppendix);
-    }, [countries]);
-
-    useEffect( () => {
-        let queryAppendix: string = ``;
-
-        commodities.forEach(c => {
-            queryAppendix += `&commodities=${c}`;
-        });
-
-        setCommoditiesLinkAppendix(queryAppendix);
-    }, [commodities]);
+    useArrayFilters("commodities", commodities, setCommoditiesLinkAppendix);
 
     useEffect( () => {
         if (query === "") {
@@ -157,65 +84,8 @@ export default function SearchBarC({ lat, lng }: Coords) {
         plat = "default";
     }
 
-    async function search(query: string, signal: AbortSignal): Promise<(Volcano | Crater | Deposit)[]>{
-        try {
-            const response = await axios.get(`${serverLink}/search/?lat=${lat}&lng=${lng}&query=${query}&minElevation=${elevation[0]}&maxElevation=${elevation[1]}&minDistance=${distance[0] * 1000}&maxDistance=${distance[1] * 1000}` + featuresLinkAppendix + countriesLinkAppendix + commoditiesLinkAppendix, { signal });
-            const responseData = response.data;
-
-            console.log(`${serverLink}/search/?lat=${lat}&lng=${lng}&query=${query}&minElevation=${elevation[0]}&maxElevation=${elevation[1]}&minDistance=${distance[0] * 1000}&maxDistance=${distance[1] * 1000}` + featuresLinkAppendix + countriesLinkAppendix + commoditiesLinkAppendix);
-            console.log(responseData);
-
-            const results: (Volcano | Crater | Deposit)[] = [];
-
-            responseData.slice().forEach((obj: any) => {
-                if ("lastEruption" in obj){
-                    results.push({
-                            fType: "volcano",
-                            id: obj.id,
-                            name: obj.volcanoName,
-                            type: obj.volcanoType,
-                            lastEruption: obj.lastEruption,
-                            location: { lat: obj.volcanoLat, lng: obj.volcanoLon},
-                            elevation: obj.volcanoElevation
-                        })
-                }
-                else if ("craterDiameter" in obj){
-                    results.push({
-                        fType: "crater",
-                        id: obj.craterId,
-                        name: obj.craterName,
-                        diameter: obj.craterDiameter,
-                        age: obj.craterAge,
-                        location: { lat: obj.craterLat, lng: obj.craterLon },
-                        ageCertainty: obj.ageCertainty
-                    })
-                }
-                else if ("depCommodity" in obj){
-                    results.push({
-                        fType: "deposit",
-                        id: obj.depId,
-                        name: obj.depName,
-                        country: obj.depCountry,
-                        type: obj.depType,
-                        location: { lat: obj.depLat, lng: obj.depLon },
-                        commodity: obj.depCommodity
-                    });
-                }
-            });
-
-            return results;
-        } catch (error: any) {
-            if (axios.isCancel(error)) {
-                console.log("Request Cancelled")
-            } else {
-                console.log(error)
-            }
-            return [];
-        }
-    }
-
     async function handleDropDownContent(query: string, signal?: AbortSignal) {
-        const results = await search(query.toLowerCase(), signal!);
+        const results = await useSearchLogic(query.toLowerCase(), signal!, { lat, lng }, filters, featuresLinkAppendix + countriesLinkAppendix + commoditiesLinkAppendix);
         buildAndSetDropdown(results)
     }
 
@@ -290,6 +160,7 @@ export default function SearchBarC({ lat, lng }: Coords) {
                     setDropDownVis(false);
                 }}
             ></SearchBar>
+            
             <Modal isVisible={filtersVis}>
                 <ScrollView contentContainerStyle = {{alignItems: "center"}} style={styles.filtersContainer}>
                     <Button title="Done" onPress={() => setFiltersVis(false)}></Button>
@@ -345,11 +216,7 @@ export default function SearchBarC({ lat, lng }: Coords) {
 
                     <Button title="Commodities of deposits:" onPress={() => setCommoditiesList(!commoditiesListVisible)}></Button>
 
-                    {commoditiesListVisible && <CommoditiesFilters selectedCommodities={commodities} setSelectedCommodities={setCommodities}/>}
-
-                    
-
-                    
+                    {commoditiesListVisible && <CommoditiesFilters selectedCommodities={commodities} setSelectedCommodities={setCommodities}/>}         
                 </ScrollView>
             </Modal>
 

@@ -1,113 +1,20 @@
-import {
-  StyleSheet,
-  Text,
-  Platform,
-  StatusBar,
-  SafeAreaView,
-  Button,
-  ActivityIndicator,
-  View,
-  ScrollView
-} from "react-native";
-import React, { useState, useEffect } from "react";
+import SearchBarC from "@/components/searchbar";
+import {formatCoords, craterAge, volcanoActivity} from "@/extensions/formatting";
+import { getNearestCrater, getNearestDeposit, getNearestVolcano } from "@/extensions/getNearestFeature";
 import * as Location from "expo-location";
+import React, { useEffect, useState } from "react";
+import {
+    Button,
+    Platform,
+    ScrollView,
+    StatusBar,
+    StyleSheet,
+    Text,
+    View
+} from "react-native";
 import Config from "../app/config";
 import Modal from "../components/modal";
-import axios from "axios";
-import SearchBarC from "@/components/searchbar";
-
-interface Coords {
-  lat: number,
-  lng: number
-}
-
-interface Volcano {
-    name: string,
-    type: string,
-    lastEruption: number,
-    location: Coords,
-    elevation: number
-}
-
-interface Crater {
-    id: number
-    name: string,
-    diameter: number,
-    age: number,
-    location: Coords,
-    ageCertainty: string
-}
-
-interface Deposit {
-    name: string,
-    country: string,
-    type: string,
-    location: Coords,
-    commodity: string
-}
-
-function formatCoords(lat: number, lng: number){
-    let coords: string[] = ["", ""];
-    let latSec: number = Math.round(lat * 3600);
-    let lngSec: number = Math.round(lng * 3600);
-
-    let latMin: number = ( ( latSec % 3600 ) - ((latSec % 3600) % 60) ) / 60;
-    let lngMin: number = ( ( lngSec % 3600 ) - ((lngSec % 3600) % 60) ) / 60;
-
-    let latDeg: number = ( latSec - ( latSec % 3600 ) ) / 3600;
-    let lngDeg: number = ( lngSec - ( lngSec % 3600 ) ) / 3600;
-
-    latSec = ( ( latSec % 3600 ) % 60 );
-    lngSec = lngSec = ( ( lngSec % 3600 ) % 60 );
-
-    coords[0] = (lat >= 0) ? `${latDeg}° ${latMin}' ${latSec}" N` : `${-latDeg}° ${-latMin}' ${-latSec}" S`;
-
-    coords[1] = (lng >= 0) ? `${lngDeg}° ${lngMin}' ${lngSec}" E` : `${-lngDeg}° ${-lngMin}' ${-lngSec}" W`;
-
-    return `${coords[0]},    ${coords[1]}`;
-}
-
-function volcanoActivity(lastErup: number){
-    if (lastErup == -32768){
-        return "Active during the holocene, last eruption unknown";
-    }
-    else if (lastErup == -2147483647){
-        return "Inactive";
-    }
-    else{
-        if (lastErup < 0){
-            return `Active, last eruption in ${-lastErup}BCE`
-        }
-        else {
-            return `Active, last eruption ${lastErup}CE`
-        }
-    }
-}
-
-function craterAge(id: number, age: number, certainty: string){
-    if (id >= 281){
-        if (certainty == "exact"){
-            return `${age} million years old`
-        }
-        else if (certainty == "around"){
-            return `Around ${age} million years old`
-        }
-        else if (certainty == "less"){
-            return `Less than ${age} million years old`
-        }
-    }
-    else if (id < 281){
-        if (certainty == "exact"){
-            return `${age} thousand years old`
-        }
-        else if (certainty == "around"){
-            return `Around ${age} thousand years old`
-        }
-        else if (certainty == "less"){
-            return `Less than ${age} thousand years old`
-        }
-    }
-}
+import type { Coords, Crater, Deposit, Volcano } from "../types/types";
 
 function gcDistance(p1: Coords, p2: Coords){
     const r = 6371000;
@@ -134,6 +41,8 @@ export default function Controles() {
     const [ errorMsg, setErrorMsg ] = useState<string | null>(null);
 
     const [ nearestVolc, setNearestVolc ] = useState<Volcano>({
+        fType: "volcano",
+        id: 0,
         name: "",
         type: "",
         lastEruption: 0,
@@ -142,6 +51,7 @@ export default function Controles() {
     });
 
     const [ nearestCrater, setNearestCrater ] = useState<Crater>({
+        fType: "crater",
         id: 0,
         name: "",
         diameter: 0,
@@ -151,6 +61,8 @@ export default function Controles() {
     });
 
     const [ nearestDeposit, setNearestDeposit ] = useState<Deposit>({
+        fType: "deposit",
+        id: 0,
         name: "",
         country: "",
         type: "",
@@ -191,13 +103,15 @@ export default function Controles() {
     const craterLink = `${Config.SERVER_URL}/meteoricCraters/nearest?lat=${latitude}&lon=${longitude}`
     const depositLink = `${Config.SERVER_URL}/minerals/nearest?lat=${latitude}&lon=${longitude}`
 
-    function getNearestVolcano() {
+/*     function getNearestVolcano() {
         axios
             .get(volcanoLink)
             .then((response) => {
                 const responseData = response.data;
 
                 setNearestVolc({
+                    fType: "volcano",
+                    id: responseData.volcanoId,
                     name: responseData.volcanoName,
                     type: responseData.volcanoType,
                     lastEruption: responseData.lastEruption,
@@ -217,6 +131,7 @@ export default function Controles() {
                 const responseData = response.data;
 
                 setNearestCrater({
+                    fType: "crater",
                     id: responseData.craterId,
                     name: responseData.craterName,
                     diameter: responseData.craterDiameter,
@@ -237,6 +152,8 @@ export default function Controles() {
                 const responseData = response.data;
 
                 setNearestDeposit({
+                    fType: "deposit",
+                    id: responseData.depId,
                     name: responseData.depName,
                     country: responseData.depCountry,
                     type: responseData.depType,
@@ -247,7 +164,7 @@ export default function Controles() {
             .catch((error) => {
                 console.log(error)
             });
-    }
+    } */
 
     return(
         <ScrollView style={styles.container}>
@@ -262,7 +179,7 @@ export default function Controles() {
                     <Button
                         title="Where is the nearest volcano?"
                         onPress={() => {
-                        getNearestVolcano();
+                        getNearestVolcano(latitude, longitude, setNearestVolc);
                         setVolcModalVisibility(!volcModalVisible);
                         }}
                     />
@@ -270,14 +187,14 @@ export default function Controles() {
                     <Button
                         title="Where is the nearest meteoric crater?"
                         onPress={() => {
-                            getNearestCrater();
+                            getNearestCrater(latitude, longitude, setNearestCrater);
                             setCraterModVis(!craterModVis);
                         }}
                     />
                     <Button
                         title="Where is the nearest mineral deposit?"
                         onPress={() => {
-                            getNearestDeposit();
+                            getNearestDeposit(latitude, longitude, setNearestDeposit);
                             setDepModVis(!depModVis);
                         }}
                     />

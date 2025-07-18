@@ -2,11 +2,11 @@ GET http://192.168.68.109:5253/volcanoes/nearest?lat=52.214&lon=6.880
 
 ###
 
-GET http://192.168.68.107:5253/volcanoes/
+GET http://192.168.68.108:5253/volcanoes/
 
 ###
 
-GET http://192.168.68.107:5253/meteoricCraters/
+GET http://192.168.68.108:5253/meteoricCraters/
 
 ###
 
@@ -15,40 +15,40 @@ GET http://192.168.68.109:5253/meteoricCraters/nearest?lat=52.214&lon=6.880
 
 ###
 
-GET http://192.168.68.107:5253/minerals/
+GET http://192.168.68.108:5253/minerals/
 
 ###
 
-GET http://192.168.68.107:5253/minerals/nearest?lat=52.214&lon=6.880
+GET http://192.168.68.108:5253/minerals/nearest?lat=52.214&lon=6.880
 
 ###
 
-GET http://192.168.68.107:5253/minerals/byCommodity?commodity=uranium
+GET http://192.168.68.108:5253/minerals/byCommodity?commodity=uranium
 
 ###
 
-GET http://192.168.68.107:5253/minerals/nearestByCommodity?commodity=uranium&lat=52.214&lon=6.880
+GET http://192.168.68.108:5253/minerals/nearestByCommodity?commodity=uranium&lat=52.214&lon=6.880
 
 ###
 
-GET http://192.168.68.107:5253/meteoricCraters/search?search=chic
+GET http://192.168.68.108:5253/meteoricCraters/search?search=chic
 
 ###
 
-GET http://192.168.68.107:5253/volcanoes/search?search=rod
+GET http://192.168.68.108:5253/volcanoes/search?search=rod
 
 ###
 
-GET http://192.168.68.107:5253/minerals/search?search=wan
+GET http://192.168.68.108:5253/minerals/search?search=wan
 
 ###
 
-GET http://192.168.68.107:5253/search/?lat=52.214&lng=6.880&query=he&geoFeature=volcanoes&minElevation=1000&maxElevation=2000&maxDistance=10000000
+GET http://192.168.68.108:5253/search/?lat=52.214&lng=6.880&query=he&geoFeature=volcanoes&minElevation=1000&maxElevation=2000&maxDistance=10000000
 
 ###
 
-GET http://192.168.68.107:5253/search/?lat=52.214&lng=6.880&query=e&geoFeature=mineralDeposits&commodities=iron
+GET http://192.168.68.108:5253/search/?lat=52.214&lng=6.880&query=e&geoFeature=mineralDeposits&commodities=iron
 
 ###
 
-GET http://192.168.68.107:5253/search/?lat=52.1896398&lng=6.8819116&query=r&minElevation=950&maxElevation=2000&minDistance=0&maxDistance=10000000&geoFeature=volcanoes
+GET http://192.168.68.108:5253/search/?lat=52.1896398&lng=6.8819116&query=r&minElevation=950&maxElevation=2000&minDistance=0&maxDistance=10000000&geoFeature=volcanoes
