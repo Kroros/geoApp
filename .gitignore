@@ -31,13 +31,8 @@ yarn-error.*
 *.pem
 
 # local env files
-process.env
 .env*.local
 *.env
 
 # typescript
 *.tsbuildinfo
-
-app-example
-
-geoApi/requests.http

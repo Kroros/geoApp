@@ -1,8 +1,7 @@
 import { StyleSheet, Alert, ActivityIndicator, Button, View, Platform, StatusBar, } from "react-native";
-import * as Location from 'expo-location';
 import React, { useState, useEffect } from "react";
 import { Asset } from "expo-asset";
-import { LatLng, LeafletView, MapMarker } from "react-native-leaflet-view";
+import { LeafletView, MapMarker } from "react-native-leaflet-view";
 import * as FileSystem from "expo-file-system";
 import volcanoMarkersJson from "../assets/data/volcanoMarkers.json" with { type: 'json' };
 import craterMarkersJson from "../assets/data/craterMarkers.json" with { type: 'json' };

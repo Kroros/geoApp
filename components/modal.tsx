@@ -1,5 +1,5 @@
 import {
-  StyleSheet
+    StyleSheet
 } from "react-native";
 import React from "react";
 import RNModal from "react-native-modal";
@@ -11,9 +11,9 @@ interface ModalProps {
 
 export default function Modal({ isVisible = false, children }: ModalProps) {
     return (
-            <RNModal isVisible={isVisible}>
-                {children}
-            </RNModal>
+        <RNModal isVisible={isVisible}>
+            {children}
+        </RNModal>
     );
 }
 
