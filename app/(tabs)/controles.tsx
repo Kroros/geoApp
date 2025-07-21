@@ -14,6 +14,7 @@ import Modal from "../../components/modal";
 import { Text, View } from '@/components/Themed';
 import type { Coords, Crater, Deposit, Volcano } from "../../types/types";
 import useLocation from "@/hooks/useLocation";
+import SearchBarC from "@/components/searchBar";
 
 export default function Controles() {
 
@@ -65,39 +66,38 @@ export default function Controles() {
     return (
         (latitude && longitude) && altitude ?
         (<ScrollView contentContainerStyle={styles.container}>
-                <Text style={styles.texts}>
-                    {text}
-                </Text>
+            <Text style={styles.texts}>
+                {text}
+            </Text>
 
-                <Text style={styles.texts}>
-                    Current Altitude: {br} {altitude}m {br}
-                </Text>
+            <Text style={styles.texts}>
+                Current Altitude: {br} {altitude}m {br}
+            </Text>
 
-                <Button
-                    title="Where is the nearest volcano?"
-                    onPress={() => {
-                    getNearestVolcano(latitude, longitude, setNearestVolc);
-                    setVolcModalVisibility(!volcModalVisible);
-                    }}
-                />
-                
-                <Button
-                    title="Where is the nearest meteoric crater?"
-                    onPress={() => {
-                        getNearestCrater(latitude, longitude, setNearestCrater);
-                        setCraterModVis(!craterModVis);
-                    }}
-                />
-                <Button
-                    title="Where is the nearest mineral deposit?"
-                    onPress={() => {
-                        getNearestDeposit(latitude, longitude, setNearestDeposit);
-                        setDepModVis(!depModVis);
-                    }}
-                />
-
+            <Button
+                title="Where is the nearest volcano?"
+                onPress={() => {
+                getNearestVolcano(latitude, longitude, setNearestVolc);
+                setVolcModalVisibility(!volcModalVisible);
+                }}
+            />
             
-            
+            <Button
+                title="Where is the nearest meteoric crater?"
+                onPress={() => {
+                    getNearestCrater(latitude, longitude, setNearestCrater);
+                    setCraterModVis(!craterModVis);
+                }}
+            />
+            <Button
+                title="Where is the nearest mineral deposit?"
+                onPress={() => {
+                    getNearestDeposit(latitude, longitude, setNearestDeposit);
+                    setDepModVis(!depModVis);
+                }}
+            />
+
+            <SearchBarC lat={latitude} lng={longitude}/>
 
             <Modal isVisible={volcModalVisible} children={
                 <View style={styles.popup}>
