@@ -16,6 +16,7 @@ import type { Coords, Crater, Deposit, Filter, Volcano } from "../types/types";
 import Modal from "./modal";
 import Config from "../app/config";
 import CheckBoxFilters from "./checkBoxFilters";
+import FiltersMenu from "./filtersList";
 
 export default function SearchBarC({ lat, lng }: Coords) {
     const countriesList: string[] = Config.DEFAULT_COUNTRY_SELECTION;
@@ -25,7 +26,6 @@ export default function SearchBarC({ lat, lng }: Coords) {
     const [ query, setQuery ] = useState<string>("");
     const [ dropDownVis, setDropDownVis ] = useState<boolean>(false);
     const [ dropDown, setDropDown ] = useState<ReactNode>();
-    const [ filtersVis, setFiltersVis ] = useState<boolean>(false);
     const [ countriesListVisible, setCountriesList ] = useState<boolean>(false);
     const [ commoditiesListVisible, setCommoditiesList ] = useState<boolean>(false);
 
@@ -116,98 +116,22 @@ export default function SearchBarC({ lat, lng }: Coords) {
 
     return (
         <View style={styles.containerStyle}>
-            <Button title="Filters" onPress={() => setFiltersVis(true)}></Button>
+            
 
-            <View>
-                {(distance[0] != 0 || distance[1] != 20000) ? 
-                <View>
-                    <Button title={`Feature Distance: ${distance[0]} - ${distance[1]}`} onPress={() => setDistance([0, 20000])}/>
-                </View>: null}
-
-                {(diameter[0] != 0 || diameter[1] != 100) ? 
-                <View>
-                    <Button title={`Crater Diameter: ${diameter[0]} - ${diameter[1]}`} onPress={() => setDiameter([0, 100])}/>
-                </View> : null}
-
-                {(elevation[0] != -6000 || elevation[1] != 7000) ? 
-                <View>
-                    <Button title={`Volcano Elevation: ${elevation[0]} - ${elevation[1]}`} onPress={() => setElevation([-6000, 7000])}/>
-                </View> : null}
-
-                {(countries.length !== 0) ? 
-                <View>
-                    <Button title={`Selected Countries: ${countries}`} onPress={() => setCountries([])}/>
-                </View> : null}
-
-                {(commodities.length !== 0) ? 
-                <View>
-                    <Button title={`Selected Commodities: ${commodities}`} onPress={() => setCommodities([])}/>
-                </View> : null}
-
-                {(features.length !== 0) ? 
-                <View>
-                    <Button title={`Selected Features: ${commodities}`} onPress={() => setFeatures([])}/>
-                </View> : null}
-            </View>
-
-            <Modal isVisible={filtersVis}>``
-                <ScrollView style={styles.filtersContainer} contentContainerStyle={{alignItems: "center"}}>
-                    <Button title="Done" onPress={() => setFiltersVis(false)}></Button>
-                    <Text style={styles.filtersText}>Minimal Distance:{distance[0]}km</Text>
-                    <Text style={styles.textColour}>Maximal Distance:{distance[1]}km</Text>
-                    <MultiSlider
-                        min = {0}
-                        max = {20000}
-                        step = {100}
-                        isMarkersSeparated = {true}
-                        values = {[0, 20000]}
-                        onValuesChange={setDistance}
-                        touchDimensions={{height: 250,width: 250,borderRadius: 15,slipDisplacement: 200}}
-                    ></MultiSlider>
-
-                    <View style={styles.horizontalRule}></View>
-
-                    <Text style={styles.filtersText}>Minimal Crater Diameter:{diameter[0]}km</Text>
-                    <Text style={styles.textColour}>Maximal Crater Diameter:{diameter[1]}km</Text>
-                    <MultiSlider
-                        min = {0}
-                        max = {100}
-                        step = {1}
-                        isMarkersSeparated = {true}
-                        values = {[0, 20000]}
-                        onValuesChange={setDiameter}
-                        touchDimensions={{height: 250,width: 250,borderRadius: 15,slipDisplacement: 200}}
-                    ></MultiSlider>
-
-                    <View style={styles.horizontalRule}></View>
-
-                    <Text style={styles.filtersText}>Minimal Volcano Elevation:{elevation[0]}m</Text>
-                    <Text style={styles.textColour}>Maximal Volcano Elevation:{elevation[1]}m</Text>
-                    <MultiSlider
-                        min = {-6000}
-                        max = {7000}
-                        step = {50}
-                        isMarkersSeparated = {true}
-                        values = {[-6000, 7000]}
-                        onValuesChange={setElevation}
-                        touchDimensions={{height: 250,width: 250,borderRadius: 15,slipDisplacement: 200}}
-                    ></MultiSlider>
-
-                    <View style={styles.horizontalRule}></View>
-
-                    <CheckBoxFilters items={featuresList} selectedItems={features} setSelectedItems={setFeatures}/>
-
-                    <Button title="Search in countries:" onPress={() => setCountriesList(!countriesListVisible)}></Button>
-
-                    {countriesListVisible ? <CheckBoxFilters items={countriesList} selectedItems={countries} setSelectedItems={setCountries}/> : null}
-
-                    <View style={styles.horizontalRule}></View>
-
-                    <Button title="Commodities of deposits:" onPress={() => setCommoditiesList(!commoditiesListVisible)}></Button>
-
-                    {commoditiesListVisible ? <CheckBoxFilters items={commoditiesList} selectedItems={commodities} setSelectedItems={setCommodities}/> : null}         
-                </ScrollView>
-            </Modal>
+            <FiltersMenu 
+                features={features}
+                setFeatures={setFeatures}
+                countries={countries}
+                setCountries={setCountries}
+                commodities={commodities}
+                setCommodities={setCommodities}
+                elevation={elevation}
+                setElevation={setElevation}
+                diameter={diameter}
+                setDiameter={setDiameter}
+                distance={distance}
+                setDistance={setDistance}
+            />
 
         </View>
     )
