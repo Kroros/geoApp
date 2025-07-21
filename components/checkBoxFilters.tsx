@@ -1,55 +1,63 @@
-import React, { useState, useEffect, ReactNode, useRef } from "react";
+import React, { useState, useEffect, ReactNode, useRef, useCallback, memo, useMemo } from "react";
 import {
     View,
     StyleSheet,
     Text,
     FlatList,
     Button,
+    ScrollView,
     ListRenderItemInfo,
     Pressable
 } from "react-native";
 import { Checkbox } from "react-native-paper";
 import Config from "../app/config";
+import { FlashList } from "@shopify/flash-list";
 
 
 interface Props {
-    items: string[]
-    selectedItems: string[];
-    setSelectedItems: React.Dispatch<React.SetStateAction<string[]>>;
+    items: Set<string>
+    selectedItems: Set<string>;
+    setSelectedItems: React.Dispatch<React.SetStateAction<Set<string>>>;
 }
 
 export default function CheckBoxFilters({ items, selectedItems, setSelectedItems }: Props) {
-    let labels: string[] = items;
-    if (items == Config.DEFAULT_FEATURE_SELECTION) {
-        labels = ["Volcanoes", "Meteoric Craters", "Mineral Deposits"]
+    let labels: Set<string> = items;
+    if (Array.from(items) == Config.DEFAULT_FEATURE_SELECTION) {
+        labels = new Set(["Volcanoes", "Meteoric Craters", "Mineral Deposits"])
     }
 
-    const toggleItem = (item: string) => {
-        setSelectedItems(prev => {
-            if (prev.includes(item)) {
-                return prev.filter(i => i !== item)
+    const toggleItem = useCallback((item: string) => {
+        setSelectedItems((prev) => {
+            const next = new Set(prev)
+            if (prev.has(item)) {
+                next.delete(item)
             } else {
-                return [...prev, item]
+                next.add(item)
             }
+            return next;
         })
+    }, [setSelectedItems])
+
+    type RenderItemProp = {
+        item: string;
     }
 
-    const list = items.map((item) => {
-        const isChecked = selectedItems.includes(item)
-        return (
-            <Checkbox.Item
-                key={item}
-                label={labels[items.indexOf(item)]}
-                status={isChecked ? "checked" : "unchecked"}
-                onPress={() => toggleItem(item)}
-            />
-        )
+    const RenderItem = memo(({ item }: RenderItemProp) => {
+        return (<Checkbox.Item
+            label={Array.from(labels)[Array.from(items).indexOf(item)]}
+            status={selectedItems.has(item) ? "checked" : "unchecked"}
+            onPress={() => toggleItem(item)}
+        />)
     });
 
     return (
-        <View style={{width: "100%"}}>
-            {list}
-        </View>
+            <FlatList
+                data={Array.from(items)}
+                keyExtractor={(item) => item}
+                renderItem={({ item }) => (
+                    <RenderItem item={item} />
+                )}
+            />
     )
    
 }

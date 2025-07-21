@@ -17,33 +17,19 @@ import Modal from "./modal";
 import Config from "../app/config";
 import CheckBoxFilters from "./checkBoxFilters";
 import FiltersMenu from "./filtersList";
+import { search, buildAndSetDropdown } from "@/extensions/searchLogic";
 
 export default function SearchBarC({ lat, lng }: Coords) {
-    const countriesList: string[] = Config.DEFAULT_COUNTRY_SELECTION;
-    const featuresList: string[] = Config.DEFAULT_FEATURE_SELECTION;
-    const commoditiesList: string[] = Config.DEFAULT_COMMODITY_SELECTION;
-
     const [ query, setQuery ] = useState<string>("");
     const [ dropDownVis, setDropDownVis ] = useState<boolean>(false);
     const [ dropDown, setDropDown ] = useState<ReactNode>();
-    const [ countriesListVisible, setCountriesList ] = useState<boolean>(false);
-    const [ commoditiesListVisible, setCommoditiesList ] = useState<boolean>(false);
 
-    const [ features, setFeatures ] = useState<string[]>([])
-    const [ countries, setCountries ] = useState<string[]>([])
-    const [ commodities, setCommodities ] = useState<string[]>([])
+    const [ features, setFeatures ] = useState<Set<string>>(new Set())
+    const [ countries, setCountries ] = useState<Set<string>>(new Set())
+    const [ commodities, setCommodities ] = useState<Set<string>>(new Set())
     const [ elevation, setElevation ] = useState<number[]>([-6000, 7000])
     const [ diameter, setDiameter ] = useState<number[]>([0, 100])
     const [ distance, setDistance ] = useState<number[]>([0, 20000])
-
-    const filters: Filter = {
-        features: features,
-        countries: countries,
-        commodities: commodities,
-        elevation: elevation,
-        diameter: diameter,
-        distance: distance
-    }
 
     const [ featuresLinkAppendix, setFeaturesLinkAppendix ] = useState<string>("");
     const [ countriesLinkAppendix, setCountriesLinkAppendix ] = useState<string>("");
@@ -51,15 +37,29 @@ export default function SearchBarC({ lat, lng }: Coords) {
 
     const abortControllerRef = useRef<AbortController | null>(null);
 
+    const filters: Filter = {
+        features: Array.from(features),
+        countries: Array.from(countries),
+        commodities: Array.from(commodities),
+        elevation: elevation,
+        diameter: diameter,
+        distance: distance
+    }
+
     useArrayFilters("geoFeature", Array.from(features), setFeaturesLinkAppendix);
 
     useArrayFilters("countries", Array.from(countries), setCountriesLinkAppendix);
 
     useArrayFilters("commodities", Array.from(commodities), setCommoditiesLinkAppendix);
 
+    async function handleDropDownContent(query: string, setter: React.Dispatch<React.SetStateAction<ReactNode>>, signal?: AbortSignal) {
+        const results = await search(query.toLowerCase(), signal!, { lat, lng }, filters, featuresLinkAppendix + countriesLinkAppendix + commoditiesLinkAppendix);
+        buildAndSetDropdown(results, setter)
+    }
+
     useEffect( () => {
         if (query === "") {
-            handleDropDownContent("")
+            handleDropDownContent("", setDropDown)
             return;
         }
 
@@ -71,7 +71,7 @@ export default function SearchBarC({ lat, lng }: Coords) {
             const controller = new AbortController();
             abortControllerRef.current = controller;
 
-            handleDropDownContent(query, controller.signal);
+            handleDropDownContent(query, setDropDown, controller.signal);
         }, 1000);
 
         return () => clearTimeout(delayDebounce);
@@ -86,37 +86,10 @@ export default function SearchBarC({ lat, lng }: Coords) {
         plat = "default";
     }
 
-    async function handleDropDownContent(query: string, signal?: AbortSignal) {
-        /* const results = await useSearchLogic(query.toLowerCase(), signal!, { lat, lng }, filters, featuresLinkAppendix + countriesLinkAppendix + commoditiesLinkAppendix);
-        buildAndSetDropdown(results) */
-    }
-
-    function buildAndSetDropdown(results: (Volcano | Crater | Deposit)[]) {
-        let list: ReactNode[] = [];
-
-        results.forEach(obj => {
-            if (obj.fType) {
-                list.push((
-                    <TouchableWithoutFeedback onPress={() => console.log(`Pressed on ${obj.name}`)}>
-                        <View>
-                            <Text>
-                                {obj.fType.toUpperCase()}: {obj.name}
-                            </Text>
-                            <Text>
-                                Location: {formatCoords(obj.location.lat, obj.location.lng)}
-                            </Text>
-                        </View>
-                    </TouchableWithoutFeedback>
-                ))
-            }
-        })
-
-        setDropDown(<ScrollView style={styles.dropdown}>{list}</ScrollView>)
-    }
+    
 
     return (
         <View style={styles.containerStyle}>
-            
 
             <FiltersMenu 
                 features={features}
@@ -132,6 +105,23 @@ export default function SearchBarC({ lat, lng }: Coords) {
                 distance={distance}
                 setDistance={setDistance}
             />
+
+            <Searchbar
+                value={query}
+                placeholder="Search"
+                onChangeText={(text) => {
+                    setQuery(text)
+                    setDropDownVis(true)
+                }}
+                onFocus={() => {
+                    setDropDownVis(true)
+                }}
+                onClearIconPress={() => {
+                    setDropDownVis(false)
+                }}
+            />
+
+            {dropDownVis && dropDown}
 
         </View>
     )
@@ -174,7 +164,8 @@ const styles = StyleSheet.create({
         borderColor: "gray"
     },
     containerStyle: {
-
+        width: "75%",
+        height: "25%",
     },
     textColour: {
         color: "black"

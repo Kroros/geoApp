@@ -16,12 +16,12 @@ import {
 import { Filter } from "@/types/types";
 
 interface Props {
-    features: string[],
-    setFeatures: React.Dispatch<React.SetStateAction<string[]>>;
-    countries: string[],
-    setCountries: React.Dispatch<React.SetStateAction<string[]>>;
-    commodities: string[],
-    setCommodities: React.Dispatch<React.SetStateAction<string[]>>;
+    features: Set<string>,
+    setFeatures: React.Dispatch<React.SetStateAction<Set<string>>>;
+    countries: Set<string>,
+    setCountries: React.Dispatch<React.SetStateAction<Set<string>>>;
+    commodities: Set<string>,
+    setCommodities: React.Dispatch<React.SetStateAction<Set<string>>>;
     elevation: number[],
     setElevation: React.Dispatch<React.SetStateAction<number[]>>;
     diameter: number[],
@@ -31,9 +31,9 @@ interface Props {
 }
 
 export default function FiltersMenu({ features, setFeatures, countries, setCountries, commodities, setCommodities, elevation, setElevation, diameter, setDiameter, distance, setDistance }: Props) {
-    const countriesList: string[] = Config.DEFAULT_COUNTRY_SELECTION;
-    const featuresList: string[] = Config.DEFAULT_FEATURE_SELECTION;
-    const commoditiesList: string[] = Config.DEFAULT_COMMODITY_SELECTION;
+    const countriesList: Set<string> = new Set(Config.DEFAULT_COUNTRY_SELECTION);
+    const featuresList: Set<string> = new Set(Config.DEFAULT_FEATURE_SELECTION);
+    const commoditiesList: Set<string> = new Set(Config.DEFAULT_COMMODITY_SELECTION);
 
     const [ countriesListVisible, setCountriesList ] = useState<boolean>(false);
     const [ commoditiesListVisible, setCommoditiesList ] = useState<boolean>(false);
@@ -59,24 +59,24 @@ export default function FiltersMenu({ features, setFeatures, countries, setCount
                     <Button title={`Volcano Elevation: ${elevation[0]} - ${elevation[1]}`} onPress={() => setElevation([-6000, 7000])}/>
                 </View> : null}
 
-                {(countries.length !== 0) ? 
+                {(countries.size !== 0) ? 
                 <View>
-                    <Button title={`Selected Countries: ${countries}`} onPress={() => setCountries([])}/>
+                    <Button title={`Selected Countries: ${countries}`} onPress={() => setCountries(new Set())}/>
                 </View> : null}
 
-                {(commodities.length !== 0) ? 
+                {(commodities.size !== 0) ? 
                 <View>
-                    <Button title={`Selected Commodities: ${commodities}`} onPress={() => setCommodities([])}/>
+                    <Button title={`Selected Commodities: ${commodities}`} onPress={() => setCommodities(new Set())}/>
                 </View> : null}
 
-                {(features.length !== 0) ? 
+                {(features.size !== 0) ? 
                 <View>
-                    <Button title={`Selected Features: ${commodities}`} onPress={() => setFeatures([])}/>
+                    <Button title={`Selected Features: ${commodities}`} onPress={() => setFeatures(new Set())}/>
                 </View> : null}
             </View>
 
             <Modal isVisible={filtersVis}>
-                <ScrollView style={styles.filtersContainer} contentContainerStyle={{alignItems: "center"}}>
+                <View style={styles.filtersContainer}>
                     <Button title="Done" onPress={() => setFiltersVis(false)}></Button>
                     <Text style={styles.filtersText}>Minimal Distance:{distance[0]}km</Text>
                     <Text style={styles.textColour}>Maximal Distance:{distance[1]}km</Text>
@@ -113,7 +113,7 @@ export default function FiltersMenu({ features, setFeatures, countries, setCount
                         max = {7000}
                         step = {50}
                         isMarkersSeparated = {true}
-                        values = {[-6000, 7000]}
+                        values = {[0, 7000]}
                         onValuesChange={setElevation}
                         touchDimensions={{height: 250,width: 250,borderRadius: 15,slipDisplacement: 200}}
                     ></MultiSlider>
@@ -131,7 +131,7 @@ export default function FiltersMenu({ features, setFeatures, countries, setCount
                     <Button title="Commodities of deposits:" onPress={() => setCommoditiesList(!commoditiesListVisible)}></Button>
 
                     {commoditiesListVisible ? <CheckBoxFilters items={commoditiesList} selectedItems={commodities} setSelectedItems={setCommodities}/> : null}         
-                </ScrollView>
+                </View>
             </Modal>
         </View>
     )
@@ -182,6 +182,8 @@ const styles = StyleSheet.create({
     filtersContainer: {
         backgroundColor: "white",
         alignContent: "center",
+        alignItems: "center",
+        width: "100%"
     },
     horizontalRule: {
         width: "95%",

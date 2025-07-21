@@ -1,8 +1,11 @@
 import type { Coords, Volcano, Crater, Deposit, Filter } from "../types/types";
 import axios from "axios";
 import Config from "../app/config";
+import React, { ReactNode } from "react";
+import { TouchableWithoutFeedback, View, ScrollView, Text, StyleSheet } from "react-native";
+import { formatCoords } from "./formatting";
 
-export default async function useSearchLogic(query: string, signal: AbortSignal, { lat, lng }: Coords, filters: Filter, appendix: string): Promise<(Volcano | Crater | Deposit)[]> {
+export async function search(query: string, signal: AbortSignal, { lat, lng }: Coords, filters: Filter, appendix: string): Promise<(Volcano | Crater | Deposit)[]> {
     const serverLink = `${Config.SERVER_URL}`;
     try {
         const response = await axios.get(`${serverLink}/search/?lat=${lat}&lng=${lng}&query=${query}&minElevation=${filters.elevation[0]}&maxElevation=${filters.elevation[1]}&minDistance=${filters.distance[0] * 1000}&maxDistance=${filters.distance[1] * 1000}` + appendix, { signal });
@@ -56,3 +59,35 @@ export default async function useSearchLogic(query: string, signal: AbortSignal,
         return [];
     }
 }
+
+export function buildAndSetDropdown(results: (Volcano | Crater | Deposit)[], setter: React.Dispatch<React.SetStateAction<ReactNode>>) {
+    let list: ReactNode[] = [];
+
+    results.forEach(obj => {
+        if (obj.fType) {
+            list.push((
+                <TouchableWithoutFeedback key={obj.fType + obj.id.toString()} onPress={() => console.log(`Pressed on ${obj.name}`)}>
+                    <View>
+                        <Text>
+                            {obj.fType.toUpperCase()}: {obj.name}
+                        </Text>
+                        <Text>
+                            Location: {formatCoords(obj.location.lat, obj.location.lng)}
+                        </Text>
+                    </View>
+                </TouchableWithoutFeedback>
+            ))
+        }
+    })
+    
+
+    setter(<ScrollView style={styles.dropdown}>{list}</ScrollView>)
+}
+
+const styles = StyleSheet.create({
+    dropdown: {
+        width: "100%",
+        height: "50%",
+        backgroundColor: "white",
+    },
+})

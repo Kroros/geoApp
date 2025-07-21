@@ -66,6 +66,8 @@ export default function Controles() {
     return (
         (latitude && longitude) && altitude ?
         (<ScrollView contentContainerStyle={styles.container}>
+            <SearchBarC lat={latitude} lng={longitude}/>
+
             <Text style={styles.texts}>
                 {text}
             </Text>
@@ -97,7 +99,7 @@ export default function Controles() {
                 }}
             />
 
-            <SearchBarC lat={latitude} lng={longitude}/>
+            
 
             <Modal isVisible={volcModalVisible} children={
                 <View style={styles.popup}>
