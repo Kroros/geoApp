@@ -10,7 +10,8 @@ export type Volcano = {
     type: string,
     lastEruption: number,
     location: Coords,
-    elevation: number
+    elevation: number,
+    country: string
 }
 
 export type Crater = {

@@ -18,7 +18,8 @@ export function getNearestVolcano(latitude: number, longitude: number, setNeares
                 type: responseData.volcanoType,
                 lastEruption: responseData.lastEruption,
                 location: { lat: responseData.volcanoLat, lng: responseData.volcanoLon },
-                elevation: responseData.volcanoElevation
+                elevation: responseData.volcanoElevation,
+                country: responseData.volcanoCountry
             });
         })
         .catch((error) => {

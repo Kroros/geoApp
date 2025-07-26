@@ -60,7 +60,8 @@ public static class SearchEndpoints
                 var volcanoes = await dbContext.Volcanoes
                 .Where(v => v.VolcanoName.ToLower().Contains(query) &&
                             (v.VolcanoElevation >= minElevation) &&
-                            (v.VolcanoElevation <= maxElevation))
+                            (v.VolcanoElevation <= maxElevation) &&
+                            countries.Contains(v.VolcanoCountry))
                 .Select(v => v.VolToDto())
                 .AsNoTracking()
                 .ToListAsync();

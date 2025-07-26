@@ -26,7 +26,8 @@ export default function Controles() {
         type: "",
         lastEruption: 0,
         location: {lat: 0, lng: 0},
-        elevation: 0
+        elevation: 0,
+        country: ""
     });
 
     const [ nearestCrater, setNearestCrater ] = useState<Crater>({
@@ -109,7 +110,7 @@ export default function Controles() {
             <View style={styles.popup}>
                 <Text style={styles.texts}>
                     The nearest volcano to your location is {nearestVolc.name} {br}{br}
-                    Volcano Location: {formatCoords(nearestVolc.location.lat, nearestVolc.location.lng)} {br}{br}
+                    Volcano Location: {formatCoords(nearestVolc.location.lat, nearestVolc.location.lng)} ({nearestVolc.country}) {br}{br}
                     Distance from current location:
                     {gcDistance({lat: latitude, lng: longitude}, {lat: nearestVolc.location.lat, lng: nearestVolc.location.lng})/1000}km {br}{br}
                     Volcano Type: {nearestVolc.type} {br}{br}

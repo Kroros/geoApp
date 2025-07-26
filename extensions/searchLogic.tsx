@@ -22,7 +22,8 @@ export async function search(query: string, signal: AbortSignal, { lat, lng }: C
                         type: obj.volcanoType,
                         lastEruption: obj.lastEruption,
                         location: { lat: obj.volcanoLat, lng: obj.volcanoLon},
-                        elevation: obj.volcanoElevation
+                        elevation: obj.volcanoElevation,
+                        country: obj.volcanoCountry
                     })
             }
             else if ("craterDiameter" in obj){

@@ -12,4 +12,5 @@ public class Volcano
     public int? LastEruption { get; set; }
     public required Point VolcanoLocation { get; set; }
     public int VolcanoElevation { get; set; }
+    public required string VolcanoCountry { get;  set; }
 }

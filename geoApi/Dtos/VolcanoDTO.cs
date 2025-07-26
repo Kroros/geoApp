@@ -7,5 +7,6 @@ public record class VolcanoDto(
     int? LastEruption,
     double VolcanoLat,
     double VolcanoLon,
-    int VolcanoElevation
+    int VolcanoElevation,
+    string VolcanoCountry
 );
