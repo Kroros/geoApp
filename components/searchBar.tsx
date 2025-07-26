@@ -24,9 +24,9 @@ export default function SearchBarC({ lat, lng }: Coords) {
     const [ dropDownVis, setDropDownVis ] = useState<boolean>(false);
     const [ dropDown, setDropDown ] = useState<ReactNode>();
 
-    const [ features, setFeatures ] = useState<Set<string>>(new Set())
-    const [ countries, setCountries ] = useState<Set<string>>(new Set())
-    const [ commodities, setCommodities ] = useState<Set<string>>(new Set())
+    const [ features, setFeatures ] = useState<string[]>([])
+    const [ countries, setCountries ] = useState<string[]>([])
+    const [ commodities, setCommodities ] = useState<string[]>([])
     const [ elevation, setElevation ] = useState<number[]>([-6000, 7000])
     const [ diameter, setDiameter ] = useState<number[]>([0, 100])
     const [ distance, setDistance ] = useState<number[]>([0, 20000])
@@ -38,9 +38,9 @@ export default function SearchBarC({ lat, lng }: Coords) {
     const abortControllerRef = useRef<AbortController | null>(null);
 
     const filters: Filter = {
-        features: Array.from(features),
-        countries: Array.from(countries),
-        commodities: Array.from(commodities),
+        features: features,
+        countries: countries,
+        commodities: commodities,
         elevation: elevation,
         diameter: diameter,
         distance: distance
@@ -119,6 +119,7 @@ export default function SearchBarC({ lat, lng }: Coords) {
                 onClearIconPress={() => {
                     setDropDownVis(false)
                 }}
+                style={{width: "100%"}}
             />
 
             {dropDownVis && dropDown}
@@ -128,66 +129,8 @@ export default function SearchBarC({ lat, lng }: Coords) {
 }
 
 const styles = StyleSheet.create({
-    dropdown: {
-        width: "100%",
-        backgroundColor: "white",
-    },
-    searchBarContainer: {
-        backgroundColor: "#505050"
-    },
-    searchBarInputContainer: {
-
-    },
-    searchBarInput: {
-        fontFamily: "monospace",
-        color: "white",
-    },
-    dropDownItem: {
-        borderColor: "gray",
-        borderWidth: 1,
-    },
-    dropDownItemTextTag: {
-        fontFamily: "monospace",
-        fontSize: 15,
-        color: "gray",
-        paddingTop: "3%",
-        paddingBottom: "3%",
-        borderWidth: 1,
-        borderColor: "gray"
-    },
-    dropDownItemText: {
-        fontFamily: "monospace",
-        fontSize: 15,
-        paddingTop: "3%",
-        paddingBottom: "3%",
-        borderWidth: 1,
-        borderColor: "gray"
-    },
     containerStyle: {
-        width: "75%",
+        width: "100%",
         height: "25%",
     },
-    textColour: {
-        color: "black"
-    },
-    filtersContainer: {
-        backgroundColor: "white",
-        alignContent: "center",
-    },
-    horizontalRule: {
-        width: "95%",
-        borderBottomColor:"gray", 
-        borderBottomWidth: 1,
-        paddingBottom: "2.5%",
-    },
-    filtersText: {
-        color: "black",
-        paddingTop: "5%"
-    },
-    textStyle: {
-        textDecorationLine: "none",
-    },
-    checkBox: {
-        borderRadius: 0
-    }
 })

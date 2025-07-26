@@ -16,12 +16,12 @@ import {
 import { Filter } from "@/types/types";
 
 interface Props {
-    features: Set<string>,
-    setFeatures: React.Dispatch<React.SetStateAction<Set<string>>>;
-    countries: Set<string>,
-    setCountries: React.Dispatch<React.SetStateAction<Set<string>>>;
-    commodities: Set<string>,
-    setCommodities: React.Dispatch<React.SetStateAction<Set<string>>>;
+    features: string[],
+    setFeatures: React.Dispatch<React.SetStateAction<string[]>>;
+    countries: string[],
+    setCountries: React.Dispatch<React.SetStateAction<string[]>>;
+    commodities: string[],
+    setCommodities: React.Dispatch<React.SetStateAction<string[]>>;
     elevation: number[],
     setElevation: React.Dispatch<React.SetStateAction<number[]>>;
     diameter: number[],
@@ -31,12 +31,12 @@ interface Props {
 }
 
 export default function FiltersMenu({ features, setFeatures, countries, setCountries, commodities, setCommodities, elevation, setElevation, diameter, setDiameter, distance, setDistance }: Props) {
-    const countriesList: Set<string> = new Set(Config.DEFAULT_COUNTRY_SELECTION);
-    const featuresList: Set<string> = new Set(Config.DEFAULT_FEATURE_SELECTION);
-    const commoditiesList: Set<string> = new Set(Config.DEFAULT_COMMODITY_SELECTION);
+    const countriesList: string[] = Config.DEFAULT_COUNTRY_SELECTION;
+    const featuresList: string[] = Config.DEFAULT_FEATURE_SELECTION;
+    const commoditiesList: string[] = Config.DEFAULT_COMMODITY_SELECTION;
 
-    const [ countriesListVisible, setCountriesList ] = useState<boolean>(false);
-    const [ commoditiesListVisible, setCommoditiesList ] = useState<boolean>(false);
+    const [ countriesListVisible, setCountriesListVis ] = useState<boolean>(false);
+    const [ commoditiesListVisible, setCommoditiesListVis ] = useState<boolean>(false);
     const [ filtersVis, setFiltersVis ] = useState<boolean>(false);
 
     return(
@@ -59,24 +59,24 @@ export default function FiltersMenu({ features, setFeatures, countries, setCount
                     <Button title={`Volcano Elevation: ${elevation[0]} - ${elevation[1]}`} onPress={() => setElevation([-6000, 7000])}/>
                 </View> : null}
 
-                {(countries.size !== 0) ? 
+                {(countries.length !== 0) ? 
                 <View>
-                    <Button title={`Selected Countries: ${countries}`} onPress={() => setCountries(new Set())}/>
+                    <Button title={`Selected Countries: ${countries}`} onPress={() => setCountries([])}/>
                 </View> : null}
 
-                {(commodities.size !== 0) ? 
+                {(commodities.length !== 0) ? 
                 <View>
-                    <Button title={`Selected Commodities: ${commodities}`} onPress={() => setCommodities(new Set())}/>
+                    <Button title={`Selected Commodities: ${commodities}`} onPress={() => setCommodities([])}/>
                 </View> : null}
 
-                {(features.size !== 0) ? 
+                {(features.length !== 0) ? 
                 <View>
-                    <Button title={`Selected Features: ${commodities}`} onPress={() => setFeatures(new Set())}/>
+                    <Button title={`Selected Features: ${commodities}`} onPress={() => setFeatures([])}/>
                 </View> : null}
             </View>
 
             <Modal isVisible={filtersVis}>
-                <View style={styles.filtersContainer}>
+                <ScrollView style={styles.filtersContainer} contentContainerStyle={{alignItems: "center"}}>
                     <Button title="Done" onPress={() => setFiltersVis(false)}></Button>
                     <Text style={styles.filtersText}>Minimal Distance:{distance[0]}km</Text>
                     <Text style={styles.textColour}>Maximal Distance:{distance[1]}km</Text>
@@ -122,16 +122,16 @@ export default function FiltersMenu({ features, setFeatures, countries, setCount
 
                     <CheckBoxFilters items={featuresList} selectedItems={features} setSelectedItems={setFeatures}/>
 
-                    <Button title="Search in countries:" onPress={() => setCountriesList(!countriesListVisible)}></Button>
+                    <Button title="Search in countries:" onPress={() => setCountriesListVis(!countriesListVisible)}></Button>
 
                     {countriesListVisible ? <CheckBoxFilters items={countriesList} selectedItems={countries} setSelectedItems={setCountries}/> : null}
 
                     <View style={styles.horizontalRule}></View>
 
-                    <Button title="Commodities of deposits:" onPress={() => setCommoditiesList(!commoditiesListVisible)}></Button>
+                    <Button title="Commodities of deposits:" onPress={() => setCommoditiesListVis(!commoditiesListVisible)}></Button>
 
                     {commoditiesListVisible ? <CheckBoxFilters items={commoditiesList} selectedItems={commodities} setSelectedItems={setCommodities}/> : null}         
-                </View>
+                </ScrollView>
             </Modal>
         </View>
     )
@@ -182,7 +182,6 @@ const styles = StyleSheet.create({
     filtersContainer: {
         backgroundColor: "white",
         alignContent: "center",
-        alignItems: "center",
         width: "100%"
     },
     horizontalRule: {

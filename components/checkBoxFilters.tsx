@@ -10,18 +10,19 @@ import {
     Pressable
 } from "react-native";
 import { Checkbox } from "react-native-paper";
+import BouncyCheckbox from "react-native-bouncy-checkbox";
 import Config from "../app/config";
 import { FlashList } from "@shopify/flash-list";
 
 
 interface Props {
-    items: Set<string>
-    selectedItems: Set<string>;
-    setSelectedItems: React.Dispatch<React.SetStateAction<Set<string>>>;
+    items: string[],
+    selectedItems: string[],
+    setSelectedItems: React.Dispatch<React.SetStateAction<string[]>>,
 }
 
 export default function CheckBoxFilters({ items, selectedItems, setSelectedItems }: Props) {
-    let labels: Set<string> = items;
+    /* let labels: Set<string> = items;
     if (Array.from(items) == Config.DEFAULT_FEATURE_SELECTION) {
         labels = new Set(["Volcanoes", "Meteoric Craters", "Mineral Deposits"])
     }
@@ -43,11 +44,12 @@ export default function CheckBoxFilters({ items, selectedItems, setSelectedItems
     }
 
     const RenderItem = memo(({ item }: RenderItemProp) => {
-        return (<Checkbox.Item
-            label={Array.from(labels)[Array.from(items).indexOf(item)]}
-            status={selectedItems.has(item) ? "checked" : "unchecked"}
-            onPress={() => toggleItem(item)}
-        />)
+        return (
+        <BouncyCheckbox 
+            text = {item}
+            onPress={() => toggleItem()}
+        />
+        )
     });
 
     return (
@@ -58,6 +60,44 @@ export default function CheckBoxFilters({ items, selectedItems, setSelectedItems
                     <RenderItem item={item} />
                 )}
             />
-    )
+    ) */
+
+    const toggleItem = useCallback((item: string) => {
+        setSelectedItems(prev => {
+            if (prev.includes(item)) {
+                return prev.filter(i => i !== item)
+            } else {
+                return [...prev, item]
+            }
+        })
+    }, [setSelectedItems])
+
+    const list = items.map((item) => (
+        <BouncyCheckbox 
+            key = {item}
+            text = {item}
+            textStyle = {styles.textStyle}
+            iconStyle = {styles.checkBox}
+            innerIconStyle = {styles.checkBox}
+            onPress={() => {
+                toggleItem(item)
+            }}
+        />
+    ));
+
+    return(
+        <View style={{width: "100%"}}>
+            {list}
+        </View>
+    );
    
 }
+
+const styles = StyleSheet.create({
+    textStyle: {
+        textDecorationLine: "none",
+    },
+    checkBox: {
+        borderRadius: 0
+    }
+})

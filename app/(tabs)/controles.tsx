@@ -1,20 +1,21 @@
 import {formatCoords, craterAge, volcanoActivity} from "@/extensions/formatting";
 import { getNearestCrater, getNearestDeposit, getNearestVolcano } from "@/extensions/getNearestFeature";
 import { gcDistance } from "@/extensions/calculations";
-import * as Location from "expo-location";
 import React, { useEffect, useState } from "react";
 import {
     Button,
-    Platform,
+    KeyboardAvoidingView,
     ScrollView,
-    StatusBar,
     StyleSheet,
+    Platform,
+    StatusBar
 } from "react-native";
 import Modal from "../../components/modal";
 import { Text, View } from '@/components/Themed';
 import type { Coords, Crater, Deposit, Volcano } from "../../types/types";
 import useLocation from "@/hooks/useLocation";
 import SearchBarC from "@/components/searchBar";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Controles() {
 
@@ -65,9 +66,8 @@ export default function Controles() {
 
     return (
         (latitude && longitude) && altitude ?
-        (<ScrollView contentContainerStyle={styles.container}>
-            <SearchBarC lat={latitude} lng={longitude}/>
-
+        (<SafeAreaView style={styles.safeArea}>
+        <ScrollView contentContainerStyle={[styles.container]} keyboardShouldPersistTaps="handled" nestedScrollEnabled={true}>
             <Text style={styles.texts}>
                 {text}
             </Text>
@@ -79,8 +79,8 @@ export default function Controles() {
             <Button
                 title="Where is the nearest volcano?"
                 onPress={() => {
-                getNearestVolcano(latitude, longitude, setNearestVolc);
-                setVolcModalVisibility(!volcModalVisible);
+                    getNearestVolcano(latitude, longitude, setNearestVolc);
+                    setVolcModalVisibility(!volcModalVisible);
                 }}
             />
             
@@ -99,67 +99,79 @@ export default function Controles() {
                 }}
             />
 
+            <KeyboardAvoidingView style={{width: "100%"}}>
+                <SearchBarC lat={latitude} lng={longitude}/>
+            </KeyboardAvoidingView>
+        </ScrollView>
+
+
+        <Modal isVisible={volcModalVisible} children={
+            <View style={styles.popup}>
+                <Text style={styles.texts}>
+                    The nearest volcano to your location is {nearestVolc.name} {br}{br}
+                    Volcano Location: {formatCoords(nearestVolc.location.lat, nearestVolc.location.lng)} {br}{br}
+                    Distance from current location:
+                    {gcDistance({lat: latitude, lng: longitude}, {lat: nearestVolc.location.lat, lng: nearestVolc.location.lng})/1000}km {br}{br}
+                    Volcano Type: {nearestVolc.type} {br}{br}
+                    Volcano Activity: {volcanoActivity(nearestVolc.lastEruption)} {br}{br}
+                    Volcano maximum elevation: {nearestVolc.elevation} {br}
+                </Text>
+                <Button title="Close" onPress={() => setVolcModalVisibility(!volcModalVisible)}/>
+            </View>
             
+            }>   
+        </Modal>
 
-            <Modal isVisible={volcModalVisible} children={
-                <View style={styles.popup}>
-                    <Text style={styles.texts}>
-                        The nearest volcano to your location is {nearestVolc.name} {br}{br}
-                        Volcano Location: {formatCoords(nearestVolc.location.lat, nearestVolc.location.lng)} {br}{br}
-                        Distance from current location:
-                        {gcDistance({lat: latitude, lng: longitude}, {lat: nearestVolc.location.lat, lng: nearestVolc.location.lng})/1000}km {br}{br}
-                        Volcano Type: {nearestVolc.type} {br}{br}
-                        Volcano Activity: {volcanoActivity(nearestVolc.lastEruption)} {br}{br}
-                        Volcano maximum elevation: {nearestVolc.elevation} {br}
-                    </Text>
-                    <Button title="Close" onPress={() => setVolcModalVisibility(!volcModalVisible)}/>
-                </View>
-                
-                }>   
-            </Modal>
+        <Modal isVisible={craterModVis} children={
+            <View>
+                <Text style={styles.texts}>
+                    The nearest meteoric crater to your location is {nearestCrater.name} {br}{br}
+                    Crater Location: {formatCoords(nearestCrater.location.lat, nearestCrater.location.lng)} {br}{br}
+                    Distance from current location:
+                    {gcDistance({lat: latitude, lng: longitude}, {lat: nearestCrater.location.lat, lng: nearestCrater.location.lng})/1000}km {br}{br}
+                    Crater Diameter: {nearestCrater.diameter}km {br}{br}
+                    Crater Age: {craterAge(nearestCrater.id, nearestCrater.age, nearestCrater.ageCertainty)} {br}
+                </Text>
+                <Button title="Close" onPress={() => setCraterModVis(!craterModVis)}/>
+            </View>
+            
+            }>   
+        </Modal>
 
-            <Modal isVisible={craterModVis} children={
-                <View>
-                    <Text style={styles.texts}>
-                        The nearest meteoric crater to your location is {nearestCrater.name} {br}{br}
-                        Crater Location: {formatCoords(nearestCrater.location.lat, nearestCrater.location.lng)} {br}{br}
-                        Distance from current location:
-                        {gcDistance({lat: latitude, lng: longitude}, {lat: nearestCrater.location.lat, lng: nearestCrater.location.lng})/1000}km {br}{br}
-                        Crater Diameter: {nearestCrater.diameter}km {br}{br}
-                        Crater Age: {craterAge(nearestCrater.id, nearestCrater.age, nearestCrater.ageCertainty)} {br}
-                    </Text>
-                    <Button title="Close" onPress={() => setCraterModVis(!craterModVis)}/>
-                </View>
-                
-                }>   
-            </Modal>
+        <Modal isVisible={depModVis} children={
+            <View>
+                <Text style={styles.texts}>
+                    The nearest known mineral deposit to your location is {nearestDeposit.name} {br}{br}
+                    Deposit Location: {formatCoords(nearestDeposit.location.lat, nearestDeposit.location.lng)} ({nearestDeposit.country}) {br}{br}
+                    Distance from current location:
+                    {gcDistance({lat: latitude, lng: longitude}, {lat: nearestDeposit.location.lat, lng: nearestDeposit.location.lng})/1000}km {br}{br}
+                    Deposit Type: {nearestDeposit.type} {br}{br}
+                    Commodoties found at deposit: {nearestDeposit.commodity} {br}
+                </Text>
+                <Button title="Close" onPress={() => setDepModVis(!depModVis)}/>
+            </View>
+            
+            }>   
+        </Modal>
 
-            <Modal isVisible={depModVis} children={
-                <View>
-                    <Text style={styles.texts}>
-                        The nearest known mineral deposit to your location is {nearestDeposit.name} {br}{br}
-                        Deposit Location: {formatCoords(nearestDeposit.location.lat, nearestDeposit.location.lng)} ({nearestDeposit.country}) {br}{br}
-                        Distance from current location:
-                        {gcDistance({lat: latitude, lng: longitude}, {lat: nearestDeposit.location.lat, lng: nearestDeposit.location.lng})/1000}km {br}{br}
-                        Deposit Type: {nearestDeposit.type} {br}{br}
-                        Commodoties found at deposit: {nearestDeposit.commodity} {br}
-                    </Text>
-                    <Button title="Close" onPress={() => setDepModVis(!depModVis)}/>
-                </View>
-                
-                }>   
-            </Modal>
-        </ScrollView>) :
-        (<Text>Finding Location...</Text>)
-  );
+        </SafeAreaView>) : (
+            <Text>Finding Location...</Text>
+        )
+    );
 }
 
 const styles = StyleSheet.create({
-    container: {
+    safeArea: {
         flex: 1,
+        marginTop: "-55%",
+        backgroundColor: 'black',
+    },
+    container: {
+        flexGrow: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        width: "100%"
+        width: "100%",
+        maxHeight: 1500
     },
     title: {
         fontSize: 20,
@@ -169,11 +181,6 @@ const styles = StyleSheet.create({
         marginVertical: 30,
         height: 1,
         width: '80%',
-    },
-    container1: {
-        flex: 1,
-        backgroundColor: "#222222",
-        paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
     },
     texts: {
         color: "#FFFFFF",

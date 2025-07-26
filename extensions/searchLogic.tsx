@@ -67,7 +67,7 @@ export function buildAndSetDropdown(results: (Volcano | Crater | Deposit)[], set
         if (obj.fType) {
             list.push((
                 <TouchableWithoutFeedback key={obj.fType + obj.id.toString()} onPress={() => console.log(`Pressed on ${obj.name}`)}>
-                    <View>
+                    <View style={styles.result}>
                         <Text>
                             {obj.fType.toUpperCase()}: {obj.name}
                         </Text>
@@ -81,13 +81,36 @@ export function buildAndSetDropdown(results: (Volcano | Crater | Deposit)[], set
     })
     
 
-    setter(<ScrollView style={styles.dropdown}>{list}</ScrollView>)
+    setter(
+        <View style={{
+            maxHeight: 300,
+            backgroundColor: '#fff',
+            borderRadius: 8,
+            borderWidth: 1,
+            borderColor: '#ccc',
+            overflow: 'hidden',
+            minHeight: 300
+            }}
+        >
+            <ScrollView
+                style={styles.dropdown}
+                nestedScrollEnabled={true}
+                keyboardShouldPersistTaps="handled"
+                contentContainerStyle={{ flexGrow: 1}}
+            >
+                {list}
+            </ScrollView>
+
+        </View>
+    )
 }
 
 const styles = StyleSheet.create({
     dropdown: {
         width: "100%",
-        height: "50%",
         backgroundColor: "white",
     },
+    result: {
+        padding: 10
+    }
 })
