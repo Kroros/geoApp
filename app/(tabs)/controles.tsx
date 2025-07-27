@@ -1,21 +1,18 @@
 import {formatCoords, craterAge, volcanoActivity} from "@/extensions/formatting";
 import { getNearestCrater, getNearestDeposit, getNearestVolcano } from "@/extensions/getNearestFeature";
 import { gcDistance } from "@/extensions/calculations";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
     Button,
     KeyboardAvoidingView,
-    ScrollView,
     StyleSheet,
-    Platform,
-    StatusBar
+    SafeAreaView
 } from "react-native";
 import Modal from "../../components/modal";
 import { Text, View } from '@/components/Themed';
-import type { Coords, Crater, Deposit, Volcano } from "../../types/types";
+import type { Crater, Deposit, Volcano } from "../../types/types";
 import useLocation from "@/hooks/useLocation";
 import SearchBarC from "@/components/searchBar";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Controles() {
 
@@ -68,7 +65,7 @@ export default function Controles() {
     return (
         (latitude && longitude) && altitude ?
         (<SafeAreaView style={styles.safeArea}>
-        <ScrollView contentContainerStyle={[styles.container]} keyboardShouldPersistTaps="handled" nestedScrollEnabled={true}>
+        <View style={[styles.container]}>
             <Text style={styles.texts}>
                 {text}
             </Text>
@@ -103,7 +100,7 @@ export default function Controles() {
             <KeyboardAvoidingView style={{width: "100%"}}>
                 <SearchBarC lat={latitude} lng={longitude}/>
             </KeyboardAvoidingView>
-        </ScrollView>
+        </View>
 
 
         <Modal isVisible={volcModalVisible} children={

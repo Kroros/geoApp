@@ -1,21 +1,11 @@
-import {formatCoords} from "@/extensions/formatting";
-import MultiSlider from "@ptomasroos/react-native-multi-slider";
 import { Searchbar } from "react-native-paper";
 import React, { ReactNode, useEffect, useRef, useState } from "react";
 import {
-    Button,
-    Platform,
-    ScrollView,
     StyleSheet,
-    Text,
-    TouchableWithoutFeedback,
     View,
 } from "react-native";
 import useArrayFilters from "../hooks/useArrayFilters";
-import type { Coords, Crater, Deposit, Filter, Volcano } from "../types/types";
-import Modal from "./modal";
-import Config from "../app/config";
-import CheckBoxFilters from "./checkBoxFilters";
+import type { Coords, Filter} from "../types/types";
 import FiltersMenu from "./filtersList";
 import { search, buildAndSetDropdown } from "@/extensions/searchLogic";
 
@@ -77,15 +67,6 @@ export default function SearchBarC({ lat, lng }: Coords) {
         return () => clearTimeout(delayDebounce);
     }, [query])
 
-    let plat: "android" | "ios" | "default" | "undefined";
-
-    if (Platform.OS == "android" || Platform.OS == "ios") {
-        plat = Platform.OS;
-    }
-    else {
-        plat = "default";
-    }
-
     
 
     return (
@@ -123,7 +104,6 @@ export default function SearchBarC({ lat, lng }: Coords) {
             />
 
             {dropDownVis && dropDown}
-
         </View>
     )
 }

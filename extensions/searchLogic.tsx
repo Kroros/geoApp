@@ -2,8 +2,14 @@ import type { Coords, Volcano, Crater, Deposit, Filter } from "../types/types";
 import axios from "axios";
 import Config from "../app/config";
 import React, { ReactNode } from "react";
-import { TouchableWithoutFeedback, View, ScrollView, Text, StyleSheet } from "react-native";
+import {
+    View,
+    Text,
+    StyleSheet,
+    FlatList, 
+    Pressable} from "react-native";
 import { formatCoords } from "./formatting";
+import { Link } from "expo-router";
 
 export async function search(query: string, signal: AbortSignal, { lat, lng }: Coords, filters: Filter, appendix: string): Promise<(Volcano | Crater | Deposit)[]> {
     const serverLink = `${Config.SERVER_URL}`;
@@ -62,25 +68,33 @@ export async function search(query: string, signal: AbortSignal, { lat, lng }: C
 }
 
 export function buildAndSetDropdown(results: (Volcano | Crater | Deposit)[], setter: React.Dispatch<React.SetStateAction<ReactNode>>) {
-    let list: ReactNode[] = [];
+    type RenderItemProp = {
+        item: Volcano | Crater | Deposit
+    }
 
-    results.forEach(obj => {
-        if (obj.fType) {
-            list.push((
-                <TouchableWithoutFeedback key={obj.fType + obj.id.toString()} onPress={() => console.log(`Pressed on ${obj.name}`)}>
-                    <View style={styles.result}>
-                        <Text>
-                            {obj.fType.toUpperCase()}: {obj.name}
-                        </Text>
-                        <Text>
-                            Location: {formatCoords(obj.location.lat, obj.location.lng)}
-                        </Text>
-                    </View>
-                </TouchableWithoutFeedback>
-            ))
-        }
-    })
-    
+    const RenderItem = ({ item }: RenderItemProp) => {
+        return (
+            <Link
+                key={item.fType + item.id.toString()}
+                href={{
+                    pathname: "/[fId]",
+                    params: { fId: item.fType + item.id.toString() }
+                }}
+                asChild
+            >
+                    <Pressable>
+                        <View style={styles.result}>
+                            <Text>
+                                {item.fType.toUpperCase()}: {item.name}
+                            </Text>
+                            <Text>
+                                Location: {formatCoords(item.location.lat, item.location.lng)}
+                            </Text>
+                        </View>
+                    </Pressable>
+            </Link>
+        )
+    }
 
     setter(
         <View style={{
@@ -93,15 +107,13 @@ export function buildAndSetDropdown(results: (Volcano | Crater | Deposit)[], set
             minHeight: 300
             }}
         >
-            <ScrollView
-                style={styles.dropdown}
-                nestedScrollEnabled={true}
-                keyboardShouldPersistTaps="handled"
-                contentContainerStyle={{ flexGrow: 1}}
-            >
-                {list}
-            </ScrollView>
-
+            <FlatList 
+                data = {results}
+                keyExtractor={(item) => item.fType + item.id.toString()}
+                renderItem={({ item }) => (
+                    <RenderItem item={item} />
+                )}
+            />
         </View>
     )
 }
