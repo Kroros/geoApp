@@ -16,6 +16,14 @@ public static class VolcanoEndpoints
     {
         var group = app.MapGroup("volcanoes");
 
+        //GET volcano by Id
+        group.MapGet("/{id}", async (int id, GeoContext dbContext) =>
+        {
+            Volcano? volcano = await dbContext.Volcanoes.FindAsync(id);
+
+            return volcano is null ? Results.NotFound() : Results.Ok(volcano.VolToDto());
+        });
+
         //GET nearest volcano
         group.MapGet("/nearest", async (double lat, double lon, GeoContext dbContext) =>
         {

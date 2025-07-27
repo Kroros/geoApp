@@ -16,6 +16,14 @@ public static class MineralsEndpoints
     {
         var group = app.MapGroup("minerals");
 
+        //Get deposit by Id
+        group.MapGet("/{depId}", async (int depId, GeoContext dbContext) =>
+        {
+            Mineral? deposit = await dbContext.Minerals.FindAsync(depId);
+
+            return deposit is null ? Results.NotFound() : Results.Ok(deposit.MinToDto());
+        });
+
         //GET all mineral deposits
         group.MapGet("/", async (GeoContext dbContext) =>
         {

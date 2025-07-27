@@ -15,6 +15,14 @@ public static class CraterEndpoints
     {
         var group = app.MapGroup("meteoricCraters");
 
+        //GET crater by Id
+        group.MapGet("/{craterId}", async (int craterId, GeoContext dbContext) =>
+        {
+            Crater? crater = await dbContext.MeteoricCraters.FindAsync(craterId);
+
+            return crater is null ? Results.NotFound() : Results.Ok(crater.CraterToDto());
+        });
+
         //GET all craters with known location
         group.MapGet("/", async (GeoContext dbContext) =>
         {

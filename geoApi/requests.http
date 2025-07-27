@@ -53,3 +53,15 @@ GET http://192.168.68.108:5253/search/?lat=52.214&lng=6.880&query=e&geoFeature=m
 
 GET http://192.168.68.109:5253/search/?lat=52.1896398&lng=6.8819116&query=e&minElevation=950&maxElevation=2000&minDistance=0&maxDistance=10000000&geoFeature=volcanoes&countries=italy
 
+###
+
+GET http://192.168.68.109:5253/volcanoes/1
+
+
+###
+
+GET http://192.168.68.109:5253/minerals/17527
+
+###
+
+GET http://192.168.68.109:5253/meteoricCraters/257
