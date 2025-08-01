@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "brH/PbEOaBM=",
+  "dgSpecHash": "ormmUw+7ah4=",
   "success": true,
   "projectFilePath": "D:\\User\\Documents\\Programming\\geoApp\\geoApp\\geoApi\\geoApi.csproj",
   "expectedPackageFiles": [
@@ -53,7 +53,12 @@
     "C:\\Users\\David\\.nuget\\packages\\microsoft.win32.systemevents\\6.0.0\\microsoft.win32.systemevents.6.0.0.nupkg.sha512",
     "C:\\Users\\David\\.nuget\\packages\\mono.texttemplating\\3.0.0\\mono.texttemplating.3.0.0.nupkg.sha512",
     "C:\\Users\\David\\.nuget\\packages\\nettopologysuite\\2.6.0\\nettopologysuite.2.6.0.nupkg.sha512",
+    "C:\\Users\\David\\.nuget\\packages\\nettopologysuite.io.postgis\\2.1.0\\nettopologysuite.io.postgis.2.1.0.nupkg.sha512",
     "C:\\Users\\David\\.nuget\\packages\\nettopologysuite.io.sqlserverbytes\\2.1.0\\nettopologysuite.io.sqlserverbytes.2.1.0.nupkg.sha512",
+    "C:\\Users\\David\\.nuget\\packages\\npgsql\\9.0.3\\npgsql.9.0.3.nupkg.sha512",
+    "C:\\Users\\David\\.nuget\\packages\\npgsql.entityframeworkcore.postgresql\\9.0.4\\npgsql.entityframeworkcore.postgresql.9.0.4.nupkg.sha512",
+    "C:\\Users\\David\\.nuget\\packages\\npgsql.entityframeworkcore.postgresql.nettopologysuite\\9.0.4\\npgsql.entityframeworkcore.postgresql.nettopologysuite.9.0.4.nupkg.sha512",
+    "C:\\Users\\David\\.nuget\\packages\\npgsql.nettopologysuite\\9.0.3\\npgsql.nettopologysuite.9.0.3.nupkg.sha512",
     "C:\\Users\\David\\.nuget\\packages\\system.clientmodel\\1.0.0\\system.clientmodel.1.0.0.nupkg.sha512",
     "C:\\Users\\David\\.nuget\\packages\\system.codedom\\6.0.0\\system.codedom.6.0.0.nupkg.sha512",
     "C:\\Users\\David\\.nuget\\packages\\system.collections.immutable\\7.0.0\\system.collections.immutable.7.0.0.nupkg.sha512",

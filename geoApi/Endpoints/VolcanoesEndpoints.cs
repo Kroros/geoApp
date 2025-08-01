@@ -19,7 +19,7 @@ public static class VolcanoEndpoints
         //GET volcano by Id
         group.MapGet("/{id}", async (int id, GeoContext dbContext) =>
         {
-            Volcano? volcano = await dbContext.Volcanoes.FindAsync(id);
+            Volcano? volcano = await dbContext.volcanoes.FindAsync(id);
 
             return volcano is null ? Results.NotFound() : Results.Ok(volcano.VolToDto());
         });
@@ -29,13 +29,13 @@ public static class VolcanoEndpoints
         {
             var point = new Point(lon, lat) { SRID = 4326 };
 
-            var volcanoes = await dbContext.Volcanoes
+            var volcanoes = await dbContext.volcanoes
                 .Select(v => v.VolToDto())
                 .AsNoTracking()
                 .ToListAsync();
 
             var nearest = volcanoes
-                .OrderBy(v => point.GCDistance(new Point(v.VolcanoLon, v.VolcanoLat)))
+                .OrderBy(v => point.GCDistance(new Point(v.volcanolon, v.volcanolat)))
                 .First();
 
             return Results.Ok(nearest);
@@ -44,7 +44,7 @@ public static class VolcanoEndpoints
         //GET volcanoes
         group.MapGet("/", async (GeoContext dbContext) =>
         {
-            var volcanoes = await dbContext.Volcanoes
+            var volcanoes = await dbContext.volcanoes
                 .Select(v => v.VolToDto())
                 .AsNoTracking()
                 .ToListAsync();
@@ -55,8 +55,8 @@ public static class VolcanoEndpoints
         //GET volcanoes with like name
         group.MapGet("/search", async (string search, GeoContext dbContext) =>
         {
-            var volcanoes = await dbContext.Volcanoes
-                .Where(v => v.VolcanoName.ToLower().Contains(search))
+            var volcanoes = await dbContext.volcanoes
+                .Where(v => v.volcanoname.ToLower().Contains(search))
                 .Select(v => v.VolToDto())
                 .AsNoTracking()
                 .ToListAsync();

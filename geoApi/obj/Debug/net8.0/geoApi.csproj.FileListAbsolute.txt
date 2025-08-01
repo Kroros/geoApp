@@ -180,3 +180,9 @@ D:\User\Documents\Programming\geoApp\geoApp\geoApi\obj\Debug\net8.0\refint\geoAp
 D:\User\Documents\Programming\geoApp\geoApp\geoApi\obj\Debug\net8.0\geoApi.pdb
 D:\User\Documents\Programming\geoApp\geoApp\geoApi\obj\Debug\net8.0\geoApi.genruntimeconfig.cache
 D:\User\Documents\Programming\geoApp\geoApp\geoApi\obj\Debug\net8.0\ref\geoApi.dll
+D:\User\Documents\Programming\geoApp\geoApp\geoApi\bin\Debug\net8.0\NetTopologySuite.IO.PostGis.dll
+D:\User\Documents\Programming\geoApp\geoApp\geoApi\bin\Debug\net8.0\Npgsql.dll
+D:\User\Documents\Programming\geoApp\geoApp\geoApi\bin\Debug\net8.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
+D:\User\Documents\Programming\geoApp\geoApp\geoApi\bin\Debug\net8.0\Npgsql.EntityFrameworkCore.PostgreSQL.NetTopologySuite.dll
+D:\User\Documents\Programming\geoApp\geoApp\geoApi\bin\Debug\net8.0\Npgsql.NetTopologySuite.dll
+D:\User\Documents\Programming\geoApp\geoApp\geoApi\obj\Debug\net8.0\EFCoreNpgsqlNetTopologySuite.cs

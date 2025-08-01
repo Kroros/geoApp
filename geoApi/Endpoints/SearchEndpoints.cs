@@ -57,20 +57,20 @@ public static class SearchEndpoints
 
             if (geoFeature.Contains("volcanoes"))
             {
-                var volcanoes = await dbContext.Volcanoes
-                .Where(v => v.VolcanoName.ToLower().Contains(query) &&
-                            (v.VolcanoElevation >= minElevation) &&
-                            (v.VolcanoElevation <= maxElevation) &&
+                var volcanoes = await dbContext.volcanoes
+                .Where(v => v.volcanoname.ToLower().Contains(query) &&
+                            (v.elevation >= minElevation) &&
+                            (v.elevation <= maxElevation) &&
                             countries.Any(c => 
-                                v.VolcanoCountry.ToLower().Contains(c.ToLower())))
+                                v.volcanocountry.ToLower().Contains(c.ToLower())))
                 .Select(v => v.VolToDto())
                 .AsNoTracking()
                 .ToListAsync();
 
                 foreach (var v in volcanoes)
                 {
-                    if (point.GCDistance(new Point(v.VolcanoLon, v.VolcanoLat)) <= maxDistance &&
-                    point.GCDistance(new Point(v.VolcanoLon, v.VolcanoLat)) >= minDistance)
+                    if (point.GCDistance(new Point(v.volcanolon, v.volcanolat)) <= maxDistance &&
+                    point.GCDistance(new Point(v.volcanolon, v.volcanolat)) >= minDistance)
                     {
                         results.Add(v);
                     }

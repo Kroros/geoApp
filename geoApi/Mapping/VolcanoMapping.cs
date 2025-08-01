@@ -8,14 +8,17 @@ public static class VolcanoMapping
     public static VolcanoDto VolToDto(this Volcano volcano)
     {
         return new(
-            volcano.Id,
-            volcano.VolcanoName,
-            volcano.VolcanoType,
-            volcano.LastEruption,
-            volcano.VolcanoLocation.Y,
-            volcano.VolcanoLocation.X,
-            volcano.VolcanoElevation,
-            volcano.VolcanoCountry
+            volcano.id,
+            volcano.volcanoname,
+            volcano.volcanotype,
+            volcano.volcanicregion,
+            volcano.lasteruption,
+            volcano.elevation,
+            volcano.tectonicsetting,
+            volcano.rocktype,
+            volcano.volcanolocation.Y,
+            volcano.volcanolocation.X,
+            volcano.volcanocountry
         );
     }
 }

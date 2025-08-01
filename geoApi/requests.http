@@ -2,7 +2,7 @@ GET http://192.168.68.109:5253/volcanoes/nearest?lat=52.214&lon=6.880
 
 ###
 
-GET http://192.168.68.108:5253/volcanoes/
+GET http://192.168.68.109:5253/volcanoes/
 
 ###
 

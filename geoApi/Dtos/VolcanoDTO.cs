@@ -1,12 +1,15 @@
 namespace geoApi.Dtos;
 
 public record class VolcanoDto(
-    int Id,
-    string VolcanoName,
-    string VolcanoType,
-    int? LastEruption,
-    double VolcanoLat,
-    double VolcanoLon,
-    int VolcanoElevation,
-    string VolcanoCountry
+    int id,
+    string volcanoname,
+    string volcanotype,
+    string volcanicregion,
+    int? lasteruption,
+    int elevation,
+    string? tectonicsetting,
+    string? rocktype,
+    double volcanolat,
+    double volcanolon,
+    string volcanocountry
 );

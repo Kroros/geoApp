@@ -6,9 +6,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<GeoContext>(options =>
 {
-    options.UseSqlServer(
-    builder.Configuration.GetConnectionString("DefaultConnection"),
-    sqlOptions => sqlOptions.UseNetTopologySuite()
+    options.UseNpgsql(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        npgsqlOptions => npgsqlOptions.UseNetTopologySuite()
     );
 }
 );

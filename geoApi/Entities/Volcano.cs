@@ -6,11 +6,15 @@ namespace geoApi.Entities;
 public class Volcano
 {
     [Key]
-    public int Id { get; set; }
-    public required string VolcanoName { get; set; }
-    public required string VolcanoType { get; set; }
-    public int? LastEruption { get; set; }
-    public required Point VolcanoLocation { get; set; }
-    public int VolcanoElevation { get; set; }
-    public required string VolcanoCountry { get;  set; }
+    public int id { get; set; }
+    public required string volcanoname { get; set; }
+    public required string volcanotype { get; set; }
+    public required string volcanicregion { get; set; }
+    public int? lasteruption { get; set; }
+    public int elevation { get; set; }
+    public string? tectonicsetting { get; set; }
+    public string? rocktype { get; set; }
+    public required Point volcanolocation { get; set; }
+    
+    public required string volcanocountry { get;  set; }
 }
