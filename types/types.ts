@@ -8,9 +8,12 @@ export type Volcano = {
     id: number,
     name: string,
     type: string,
+    region: string,
     lastEruption: number,
-    location: Coords,
     elevation: number,
+    setting: string,
+    rockType: string,
+    location: Coords,
     country: string
 }
 

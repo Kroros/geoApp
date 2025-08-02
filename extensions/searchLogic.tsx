@@ -13,45 +13,50 @@ import { Link } from "expo-router";
 
 export async function search(query: string, signal: AbortSignal, { lat, lng }: Coords, filters: Filter, appendix: string): Promise<(Volcano | Crater | Deposit)[]> {
     const serverLink = `${Config.SERVER_URL}`;
+    const queryUrl = `${serverLink}/search/?lat=${lat}&lng=${lng}&query=${query}&minElevation=${filters.elevation[0]}&maxElevation=${filters.elevation[1]}&minDistance=${filters.distance[0] * 1000}&maxDistance=${filters.distance[1] * 1000}` + appendix;
     try {
-        const response = await axios.get(`${serverLink}/search/?lat=${lat}&lng=${lng}&query=${query}&minElevation=${filters.elevation[0]}&maxElevation=${filters.elevation[1]}&minDistance=${filters.distance[0] * 1000}&maxDistance=${filters.distance[1] * 1000}` + appendix, { signal });
+        const response = await axios.get(queryUrl, { signal });
         const responseData = response.data;
 
         const results: (Volcano | Crater | Deposit)[] = [];
 
         responseData.slice().forEach((obj: any) => {
-            if ("lastEruption" in obj){
+            if ("lasteruption" in obj){
                 results.push({
                         fType: "volcano",
                         id: obj.id,
-                        name: obj.volcanoName,
-                        type: obj.volcanoType,
-                        lastEruption: obj.lastEruption,
-                        location: { lat: obj.volcanoLat, lng: obj.volcanoLon},
-                        elevation: obj.volcanoElevation,
-                        country: obj.volcanoCountry
+                        name: obj.volcanoname,
+                        type: obj.volcanotype,
+                        region: obj.volcanicregion,
+                        lastEruption: obj.lasteruption,
+                        elevation: obj.volcanoelevation,
+                        setting: obj.tectonicsetting,
+                        rockType: obj.rocktype,
+                        location: { lat: obj.volcanolat, lng: obj.volcanolon},
+
+                        country: obj.volcanocountry
                     })
             }
-            else if ("craterDiameter" in obj){
+            else if ("craterdiameter" in obj){
                 results.push({
                     fType: "crater",
-                    id: obj.craterId,
-                    name: obj.craterName,
-                    diameter: obj.craterDiameter,
-                    age: obj.craterAge,
-                    location: { lat: obj.craterLat, lng: obj.craterLon },
-                    ageCertainty: obj.ageCertainty
+                    id: obj.craterid,
+                    name: obj.cratername,
+                    diameter: obj.craterdiameter,
+                    age: obj.craterage,
+                    location: { lat: obj.craterlat, lng: obj.craterlon },
+                    ageCertainty: obj.agecertainty
                 })
             }
-            else if ("depCommodity" in obj){
+            else if ("depcommodity" in obj){
                 results.push({
                     fType: "deposit",
-                    id: obj.depId,
-                    name: obj.depName,
-                    country: obj.depCountry,
-                    type: obj.depType,
-                    location: { lat: obj.depLat, lng: obj.depLon },
-                    commodity: obj.depCommodity
+                    id: obj.depid,
+                    name: obj.depname,
+                    country: obj.depcountry,
+                    type: obj.deptype,
+                    location: { lat: obj.deplat, lng: obj.deplon },
+                    commodity: obj.depcommodity
                 });
             }
         });
@@ -75,10 +80,9 @@ export function buildAndSetDropdown(results: (Volcano | Crater | Deposit)[], set
     const RenderItem = ({ item }: RenderItemProp) => {
         return (
             <Link
-                key={item.fType + item.id.toString()}
                 href={{
                     pathname: "/[fId]",
-                    params: { fId: item.fType + item.id.toString() }
+                    params: { fId: item.fType + (item.id ?? '').toString() }
                 }}
                 asChild
             >
@@ -109,7 +113,7 @@ export function buildAndSetDropdown(results: (Volcano | Crater | Deposit)[], set
         >
             <FlatList 
                 data = {results}
-                keyExtractor={(item) => item.fType + item.id.toString()}
+                keyExtractor={(item) => item.fType + (item.id ?? '').toString()}
                 renderItem={({ item }) => (
                     <RenderItem item={item} />
                 )}

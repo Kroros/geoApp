@@ -6,7 +6,7 @@ GET http://192.168.68.109:5253/volcanoes/
 
 ###
 
-GET http://192.168.68.108:5253/meteoricCraters/
+GET http://192.168.68.109:5253/meteoriccraters/
 
 ###
 
@@ -15,7 +15,7 @@ GET http://192.168.68.109:5253/meteoricCraters/nearest?lat=52.214&lon=6.880
 
 ###
 
-GET http://192.168.68.108:5253/minerals/
+GET http://192.168.68.109:5253/minerals/
 
 ###
 
@@ -65,3 +65,7 @@ GET http://192.168.68.109:5253/minerals/17527
 ###
 
 GET http://192.168.68.109:5253/meteoricCraters/257
+
+###
+
+GET http://192.168.68.109:5253/search/?lat=52.1851384&lng=6.8823924&query=vesuvius&minElevation=-6000&maxElevation=7000&minDistance=0&maxDistance=20000000

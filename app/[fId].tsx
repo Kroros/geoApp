@@ -1,4 +1,4 @@
-import { getCraterById, getDepositById, getVolcanoById } from "@/extensions/fetFeatureById";
+import { getCraterById, getDepositById, getVolcanoById } from "@/extensions/getFeatureById";
 import type { Crater, Deposit, Volcano } from "../types/types";
 import { useLocalSearchParams, useNavigation } from "expo-router"
 import { useEffect, useState } from "react";
@@ -10,10 +10,13 @@ export default function FeatureInfoScreen() {
     const [ title, setTitle ] = useState<string>("");
     const [ vInfo, setVInfo ] = useState<Volcano>({
         fType: "volcano",
-        id: -1,
+        id: 0,
         name: "",
         type: "",
+        region: "",
         lastEruption: 0,
+        setting: "",
+        rockType: "",
         location: {lat: 0, lng: 0},
         elevation: 0,
         country: ""
@@ -69,9 +72,12 @@ export default function FeatureInfoScreen() {
                 <Text style={{color: "white"}}>
                     Volcano Name: {vInfo.name} {br}
                     Volcano Location: {formatCoords(vInfo.location.lat, vInfo.location.lng)} ({vInfo.country}) {br}
+                    Volcanic Region: {vInfo.region} {br}
                     Elevation: {vInfo.elevation}m {br}
                     Volcano Type: {vInfo.type} {br}
-                    Last Eruption: {volcanoActivity(vInfo.lastEruption)} {br}
+                    Volcano Activity: {volcanoActivity(vInfo.lastEruption)} {br}
+                    Tectonic Setting: {vInfo.setting} {br}
+                    Primary Rock Type: {vInfo.rockType}
                 </Text>
             )
         } else if (cInfo.id != -1) {

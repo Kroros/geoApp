@@ -6,10 +6,10 @@ namespace geoApi.Entities;
 public class Crater
 {
     [Key]
-    public int CraterId { get; set; }
-    public required string CraterName { get; set; }
-    public double? CraterDiameter { get; set; }
-    public double? CraterAge { get; set; }
-    public Point? CraterLocation { get; set; }
-    public string? AgeCertainty { get; set; }
+    public int craterid { get; set; }
+    public required string cratername { get; set; }
+    public double? craterdiameter { get; set; }
+    public double? craterage { get; set; }
+    public Point? craterlocation { get; set; }
+    public string? agecertainty { get; set; }
 }

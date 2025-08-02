@@ -13,13 +13,16 @@ export function getNearestVolcano(latitude: number, longitude: number, setNeares
 
             setNearestVolc({
                 fType: "volcano",
-                id: responseData.volcanoId,
-                name: responseData.volcanoName,
-                type: responseData.volcanoType,
-                lastEruption: responseData.lastEruption,
-                location: { lat: responseData.volcanoLat, lng: responseData.volcanoLon },
-                elevation: responseData.volcanoElevation,
-                country: responseData.volcanoCountry
+                id: responseData.volcanoid,
+                name: responseData.volcanoname,
+                type: responseData.volcanotype,
+                region: responseData.volcanicregion,
+                lastEruption: responseData.lasteruption,
+                elevation: responseData.volcanoelevation,
+                setting: responseData.tectonicsetting,
+                rockType: responseData.rocktype,
+                location: { lat: responseData.volcanolat, lng: responseData.volcanolon },
+                country: responseData.volcanocountry
             });
         })
         .catch((error) => {
@@ -37,12 +40,12 @@ export function getNearestCrater(latitude: number, longitude: number, setNearest
 
             setNearestCrater({
                 fType: "crater",
-                id: responseData.craterId,
-                name: responseData.craterName,
-                diameter: responseData.craterDiameter,
-                age: responseData.craterAge,
-                location: { lat: responseData.craterLat, lng: responseData.craterLon },
-                ageCertainty: responseData.ageCertainty
+                id: responseData.craterid,
+                name: responseData.cratername,
+                diameter: responseData.craterdiameter,
+                age: responseData.craterage,
+                location: { lat: responseData.craterlat, lng: responseData.craterlon },
+                ageCertainty: responseData.agecertainty
             });
         })
         .catch((error) => {
@@ -60,12 +63,12 @@ export function getNearestDeposit(latitude: number, longitude: number, setNeares
 
             setNearestDeposit({
                 fType: "deposit",
-                id: responseData.depId,
-                name: responseData.depName,
-                country: responseData.depCountry,
-                type: responseData.depType,
-                location: { lat: responseData.depLat, lng: responseData.depLon },
-                commodity: responseData.depCommodity
+                id: responseData.depid,
+                name: responseData.depname,
+                country: responseData.depcountry,
+                type: responseData.deptype,
+                location: { lat: responseData.deplat, lng: responseData.deplon },
+                commodity: responseData.depcommodity
             });
         })
         .catch((error) => {

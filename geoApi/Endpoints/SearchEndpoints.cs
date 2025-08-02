@@ -79,11 +79,11 @@ public static class SearchEndpoints
 
             if (geoFeature.Contains("mineralDeposits"))
             {
-                var minerals = await dbContext.Minerals
-                .Where(m => m.DepName.ToLower().Contains(query) &&
-                            countries.Contains(m.DepCountry) &&
+                var minerals = await dbContext.minerals
+                .Where(m => m.depname.ToLower().Contains(query) &&
+                            countries.Contains(m.depcountry) &&
                             commodities.Any(c => 
-                                m.DepCommodity.ToLower().Contains(c.ToLower()))
+                                m.depcommodity.ToLower().Contains(c.ToLower()))
                 )
                 .Select(m => m.MinToDto())
                 .AsNoTracking()
@@ -91,8 +91,8 @@ public static class SearchEndpoints
 
                 foreach (var m in minerals)
                 {
-                    if (point.GCDistance(new Point(m.DepLon, m.DepLat)) <= maxDistance &&
-                    point.GCDistance(new Point(m.DepLon, m.DepLat)) >= minDistance)
+                    if (point.GCDistance(new Point(m.deplon, m.deplat)) <= maxDistance &&
+                    point.GCDistance(new Point(m.deplon, m.deplat)) >= minDistance)
                     {
                         results.Add(m);
                     }
@@ -102,18 +102,18 @@ public static class SearchEndpoints
 
             if (geoFeature.Contains("impactCraters"))
             {
-                var craters = await dbContext.MeteoricCraters
-                .Where(c => c.CraterName.ToLower().Contains(query) &&
-                (c.CraterLocation != null) &&
-                (c.CraterDiameter >= minDiameter) &&
-                (c.CraterDiameter <= maxDiameter))
+                var craters = await dbContext.meteoriccraters
+                .Where(c => c.cratername.ToLower().Contains(query) &&
+                (c.craterlocation != null) &&
+                (c.craterdiameter >= minDiameter) &&
+                (c.craterdiameter <= maxDiameter))
                 .Select(c => c.CraterToDto())
                 .AsNoTracking()
                 .ToListAsync();
 
                 foreach (var c in craters)
                 {
-                    if (point.GCDistance(new Point(c.CraterLon, c.CraterLat)) <= maxDistance)
+                    if (point.GCDistance(new Point(c.craterlon, c.craterlat)) <= maxDistance)
                     {
                         results.Add(c);
                     }

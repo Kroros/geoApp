@@ -11,13 +11,16 @@ export async function getVolcanoById(id: number) {
 
         const vol: Volcano = {
             fType: "volcano",
-            id: responseData.volcanoId,
-            name: responseData.volcanoName,
-            type: responseData.volcanoType,
-            lastEruption: responseData.lastEruption,
-            location: { lat: responseData.volcanoLat, lng: responseData.volcanoLon },
-            elevation: responseData.volcanoElevation,
-            country: responseData.volcanoCountry
+            id: responseData.volcanoid,
+            name: responseData.volcanoname,
+            type: responseData.volcanotype,
+            region: responseData.volcanicregion,
+            lastEruption: responseData.lasteruption,
+            setting: responseData.tectonicsetting,
+            rockType: responseData.rocktype,
+            location: { lat: responseData.volcanolat, lng: responseData.volcanolon },
+            elevation: responseData.elevation,
+            country: responseData.volcanocountry
         }
 
         return vol;
@@ -30,7 +33,10 @@ export async function getVolcanoById(id: number) {
         id: 0,
         name: "",
         type: "",
+        region: "",
         lastEruption: 0,
+        setting: "",
+        rockType: "",
         location: {lat: 0, lng: 0},
         elevation: 0,
         country: ""
@@ -47,12 +53,12 @@ export async function getCraterById(id: number) {
 
         const crater: Crater = {
             fType: "crater",
-            id: responseData.craterId,
-            name: responseData.craterName,
-            diameter: responseData.craterDiameter,
-            age: responseData.craterAge,
-            location: { lat: responseData.craterLat, lng: responseData.craterLon },
-            ageCertainty: responseData.ageCertainty
+            id: responseData.craterid,
+            name: responseData.cratername,
+            diameter: responseData.craterdiameter,
+            age: responseData.craterage,
+            location: { lat: responseData.craterlat, lng: responseData.craterlon },
+            ageCertainty: responseData.agecertainty
         }
 
         return crater;
@@ -81,12 +87,12 @@ export async function getDepositById(id: number) {
 
         const dep: Deposit = {
             fType: "deposit",
-            id: responseData.depId,
-            name: responseData.depName,
-            country: responseData.depCountry,
-            type: responseData.depType,
-            location: { lat: responseData.depLat, lng: responseData.depLon },
-            commodity: responseData.depCommodity
+            id: responseData.depid,
+            name: responseData.depname,
+            country: responseData.depcountry,
+            type: responseData.deptype,
+            location: { lat: responseData.deplat, lng: responseData.deplon },
+            commodity: responseData.depcommodity
         }
 
         return dep;

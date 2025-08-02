@@ -10,10 +10,10 @@ class GeoContext : DbContext
         : base(options) { }
 
     public DbSet<Volcano> volcanoes => Set<Volcano>();
-    public DbSet<GeoLocation> Geolocations => Set<GeoLocation>();
-    public DbSet<Fault> Faults => Set<Fault>();
-    public DbSet<Crater> MeteoricCraters => Set<Crater>();
-    public DbSet<Mineral> Minerals => Set<Mineral>();
+    public DbSet<GeoLocation> geolocations => Set<GeoLocation>();
+    public DbSet<Fault> faults => Set<Fault>();
+    public DbSet<Crater> meteoriccraters => Set<Crater>();
+    public DbSet<Mineral> minerals => Set<Mineral>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

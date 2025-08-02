@@ -8,13 +8,13 @@ public static class MineralMapping
     public static MineralDto MinToDto(this Mineral mineral)
     {
         return new(
-            mineral.DepId,
-            mineral.DepName,
-            mineral.DepCountry,
-            mineral.DepCommodity,
-            mineral.DepType,
-            mineral.DepLocation.Y,
-            mineral.DepLocation.X
+            mineral.depid,
+            mineral.depname,
+            mineral.depcountry,
+            mineral.depcommodity,
+            mineral.deptype,
+            mineral.deplocation.Y,
+            mineral.deplocation.X
         );
     }
 }

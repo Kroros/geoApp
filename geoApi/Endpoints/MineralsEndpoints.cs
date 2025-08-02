@@ -19,7 +19,7 @@ public static class MineralsEndpoints
         //Get deposit by Id
         group.MapGet("/{depId}", async (int depId, GeoContext dbContext) =>
         {
-            Mineral? deposit = await dbContext.Minerals.FindAsync(depId);
+            Mineral? deposit = await dbContext.minerals.FindAsync(depId);
 
             return deposit is null ? Results.NotFound() : Results.Ok(deposit.MinToDto());
         });
@@ -27,7 +27,7 @@ public static class MineralsEndpoints
         //GET all mineral deposits
         group.MapGet("/", async (GeoContext dbContext) =>
         {
-            var deposits = await dbContext.Minerals
+            var deposits = await dbContext.minerals
                 .Select(m => m.MinToDto())
                 .AsNoTracking()
                 .ToListAsync();
@@ -40,13 +40,13 @@ public static class MineralsEndpoints
         {
             var point = new Point(lon, lat) { SRID = 4326 };
 
-            var deposits = await dbContext.Minerals
+            var deposits = await dbContext.minerals
                 .Select(m => m.MinToDto())
                 .AsNoTracking()
                 .ToListAsync();
 
             var nearest = deposits
-                .OrderBy(m => point.GCDistance(new Point(m.DepLon, m.DepLat)))
+                .OrderBy(m => point.GCDistance(new Point(m.deplon, m.deplat)))
                 .First();
 
             return Results.Ok(nearest);
@@ -55,8 +55,8 @@ public static class MineralsEndpoints
         //GET deposits by commodity
         group.MapGet("/byCommodity", async (string commodity, GeoContext dbContext) =>
         {
-            var deposits = await dbContext.Minerals
-                .Where(m => m.DepCommodity.ToLower().Contains(commodity))
+            var deposits = await dbContext.minerals
+                .Where(m => m.depcommodity.ToLower().Contains(commodity))
                 .Select(m => m.MinToDto())
                 .AsNoTracking()
                 .ToListAsync();
@@ -69,14 +69,14 @@ public static class MineralsEndpoints
         {
             var point = new Point(lon, lat) { SRID = 4326 };
 
-            var deposits = await dbContext.Minerals
-                .Where(m => m.DepCommodity.ToLower().Contains(commodity))
+            var deposits = await dbContext.minerals
+                .Where(m => m.depcommodity.ToLower().Contains(commodity))
                 .Select(m => m.MinToDto())
                 .AsNoTracking()
                 .ToListAsync();
 
             var nearest = deposits
-                .OrderBy(m => point.GCDistance(new Point(m.DepLon, m.DepLat)))
+                .OrderBy(m => point.GCDistance(new Point(m.deplon, m.deplat)))
                 .First();
 
             return Results.Ok(nearest);
@@ -85,8 +85,8 @@ public static class MineralsEndpoints
         //GET deposits with like name
         group.MapGet("/search", async (string search, GeoContext dbContext) =>
         {
-            var minerals = await dbContext.Minerals
-                .Where(m => m.DepName.ToLower().Contains(search))
+            var minerals = await dbContext.minerals
+                .Where(m => m.depname.ToLower().Contains(search))
                 .Select(m => m.MinToDto())
                 .AsNoTracking()
                 .ToListAsync();

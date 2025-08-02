@@ -18,7 +18,7 @@ public static class CraterEndpoints
         //GET crater by Id
         group.MapGet("/{craterId}", async (int craterId, GeoContext dbContext) =>
         {
-            Crater? crater = await dbContext.MeteoricCraters.FindAsync(craterId);
+            Crater? crater = await dbContext.meteoriccraters.FindAsync(craterId);
 
             return crater is null ? Results.NotFound() : Results.Ok(crater.CraterToDto());
         });
@@ -26,8 +26,8 @@ public static class CraterEndpoints
         //GET all craters with known location
         group.MapGet("/", async (GeoContext dbContext) =>
         {
-            var craters = await dbContext.MeteoricCraters
-                .Where(c => c.CraterLocation != null)
+            var craters = await dbContext.meteoriccraters
+                .Where(c => c.craterlocation != null)
                 .Select(c => c.CraterToDto())
                 .AsNoTracking()
                 .ToListAsync();
@@ -40,14 +40,14 @@ public static class CraterEndpoints
         {
             var point = new Point(lon, lat) { SRID = 4326 };
 
-            var craters = await dbContext.MeteoricCraters
-                .Where(c => c.CraterLocation != null)
+            var craters = await dbContext.meteoriccraters
+                .Where(c => c.craterlocation != null)
                 .Select(c => c.CraterToDto())
                 .AsNoTracking()
                 .ToListAsync();
 
             var nearest = craters
-                .OrderBy(c => point.GCDistance(new Point(c.CraterLon, c.CraterLat)))
+                .OrderBy(c => point.GCDistance(new Point(c.craterlon, c.craterlat)))
                 .First();
 
             return Results.Ok(nearest);
@@ -56,8 +56,8 @@ public static class CraterEndpoints
         //GET craters with like name
         group.MapGet("/search", async (string search, GeoContext dbContext) =>
         {
-            var craters = await dbContext.MeteoricCraters
-                .Where(c => c.CraterName.ToLower().Contains(search) && (c.CraterLocation != null))
+            var craters = await dbContext.meteoriccraters
+                .Where(c => c.cratername.ToLower().Contains(search) && (c.craterlocation != null))
                 .Select(c => c.CraterToDto())
                 .AsNoTracking()
                 .ToListAsync();

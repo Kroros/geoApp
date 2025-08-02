@@ -21,7 +21,10 @@ export default function Controles() {
         id: 0,
         name: "",
         type: "",
+        region: "",
         lastEruption: 0,
+        setting: "",
+        rockType: "",
         location: {lat: 0, lng: 0},
         elevation: 0,
         country: ""

@@ -2,10 +2,10 @@ namespace geoApi.Dtos;
 
 public record class CraterDto(
     int CraterId,
-    string CraterName,
-    double? CraterDiameter,
-    double? CraterAge,
-    double CraterLat,
-    double CraterLon,
-    string? AgeCertainty
+    string cratername,
+    double? craterdiameter,
+    double? craterage,
+    double craterlat,
+    double craterlon,
+    string? agecertainty
 );
