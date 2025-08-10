@@ -2,7 +2,6 @@ import {
     StyleSheet,
     SafeAreaView,
 } from 'react-native';
-
 import React, { useState, useEffect } from "react";
 import * as Location from "expo-location";
 import Map from "../../components/Map";

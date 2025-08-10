@@ -21,7 +21,8 @@ export default ({ config }) => ({
                 foregroundImage: "./assets/images/adaptive-icon.png",
                 backgroundColor: "#ffffff"
             },
-            edgeToEdgeEnabled: true
+            edgeToEdgeEnabled: true,
+            package: "com.anonymous.geoApp"
         },
         web: {
             bundler: "metro",

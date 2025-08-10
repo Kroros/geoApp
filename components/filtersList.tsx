@@ -66,12 +66,12 @@ export default function FiltersMenu({ features, setFeatures, countries, setCount
 
                 {(commodities.length !== 0) ? 
                 <View>
-                    <Button title={`Selected Commodities: ${commodities}`} onPress={() => setCommodities([])}/>
+                    <Button title={`Selected Commodities: ${commodities[0]}`} onPress={() => setCommodities([])}/>
                 </View> : null}
 
                 {(features.length !== 0) ? 
                 <View>
-                    <Button title={`Selected Features: ${commodities}`} onPress={() => setFeatures([])}/>
+                    <Button title={`Selected Features: ${features}`} onPress={() => setFeatures([])}/>
                 </View> : null}
             </View>
 

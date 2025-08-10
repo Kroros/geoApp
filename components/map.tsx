@@ -1,7 +1,8 @@
-import { StyleSheet, Alert, ActivityIndicator, Button, View, Platform, StatusBar, } from "react-native";
+import { StyleSheet, Alert, ActivityIndicator, Button, View, Text } from "react-native";
 import React, { useState, useEffect } from "react";
 import { Asset } from "expo-asset";
 import { LeafletView, MapMarker } from "react-native-leaflet-view";
+import MapView, { UrlTile, PROVIDER_DEFAULT } from "react-native-maps";
 import * as FileSystem from "expo-file-system";
 import volcanoMarkersJson from "../assets/data/volcanoMarkers.json" with { type: 'json' };
 import craterMarkersJson from "../assets/data/craterMarkers.json" with { type: 'json' };
@@ -76,6 +77,20 @@ export default function Map() {
         doDebug={false}
         mapMarkers={markers}
       />
+
+        {/* <MapView
+        
+        >
+            <UrlTile
+                urlTemplate="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+        </MapView> */}
+
+
+        <Text style={{ position: 'absolute', bottom: 5, right: 5, backgroundColor: 'rgba(255,255,255,0.7)', padding: 2 }}>
+            © OpenStreetMap contributors
+        </Text>
+
       <View style={styles.buttonContainer}>
         <Button
           title="🌋"
